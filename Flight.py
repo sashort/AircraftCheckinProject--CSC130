@@ -264,13 +264,14 @@ class Passenger:
     def upgrade(self):
         if isinstance(self, ParentPassenger) or isinstance(self, ChildPassenger):
             return False
-        elif self.group_boarding_id_number() < 2116:
-            # already upgraded or disabled/attendant with assistive device
+        elif isinstance(self, DisabledPassenger) or isinstance(self, AttendantPassenger):
             return False
-        elif len(__reserved_ids__) == 0:
+        elif self.is_business_select or business_select_seats_available() == 0:
             return False
         else:
+            __boarding_ids__.insert(0, self.boarding_id)
             self.boarding_id = __reserved_ids__.pop(0)
+            self.is_business_select = True
             return True
 
     def __eq__(self, other):
