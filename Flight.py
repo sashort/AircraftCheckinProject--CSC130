@@ -2,43 +2,19 @@ import names
 import random
 
 __boarding_ids__ = list()
-__unused_boarding_ids__ = list()
 __reserved_ids__ = list()
 __random_passenger_count__ = random.randint(36, 135)
 __passenger_list__ = list()
 __manual_entry_passenger_list__ = list()
-__manual_entry_unassigned__ = list()
-__conf_dicts__ = dict()
+__available_confirmation_ids__ = list()
+__check_in__ = list()
 
 
-def checkin_begun():
-    return len(__checkin__) == 1
-
-__checkin__ = list()
+# __conf_dicts__ = dict()
 
 
-def reset_passenger_list():
-    __reserved_ids__.clear()
-    __boarding_ids__.clear()
-    __passenger_list__.clear()
-    __unused_boarding_ids__.clear()
-    __manual_entry_passenger_list__.clear()
-    __manual_entry_unassigned__.clear
-    __random_passenger_count__ = 131  # random.randint(36, 135)
-    __checkin__.clear()
-
-    count = 0
-    for letter in ('A', 'B', 'C'):
-        for number in range(1, 51):
-            # The first 15 slots A1 - A15 are reserved for "Business Select" checkins
-            if letter == 'A' and number < 16:
-                __reserved_ids__.append(letter + str(number))
-            else:
-                if count > __random_passenger_count__:
-                    __unused_boarding_ids__.append(letter + str(number))
-                else:
-                    __boarding_ids__.append(letter + str(number))
-                count += 1
+def check_in_begun():
+    return len(__check_in__) == 1
 
 
 def get_passenger_list():
@@ -50,17 +26,114 @@ def get_my_passenger_list():
 
 
 def business_select_seats_available():
-    return len(__reserved_ids__)
+    available = 15
+    for passenger in __passenger_list__:
+        if passenger.is_business_select:
+            available -= 1
+    return available
 
 
-def gotta_get_away_seats_available():
-    return len(__unused_boarding_ids__)
+def wanna_get_away_seats_available():
+    available = 135
+    for passenger in __passenger_list__:
+        if not passenger.is_business_select:
+            available -= 1
+    return available
+
+
+def reset_flight():
+    __reserved_ids__.clear()
+    __boarding_ids__.clear()
+    __passenger_list__.clear()
+    __manual_entry_passenger_list__.clear()
+    __random_passenger_count__ = random.randint(36, 135)
+    __check_in__.clear()
+    __available_confirmation_ids__.clear()
+
+    while len(__available_confirmation_ids__) < 150:
+        new_confirmation_id = ""
+        for i in range(6):
+            if random.randint(0, 1) == 0:
+                # No 0 or 1, they can be confused with O and I
+                new_confirmation_id += chr(ord('2') + random.randint(0, 7))
+            else:
+                new_confirmation_id += chr(ord('A') + random.randint(0, 25))
+        if new_confirmation_id not in __available_confirmation_ids__:
+            __available_confirmation_ids__.append(new_confirmation_id)
+
+    for letter in ('A', 'B', 'C'):
+        for number in range(1, 51):
+            # The first 15 slots A1 - A15 are reserved for "Business Select" check_ins
+            if letter == 'A' and number < 16:
+                __reserved_ids__.append(letter + str(number))
+            else:
+                __boarding_ids__.append(letter + str(number))
+
+    # ===============================================================================================
+    normal_passenger_count = 0
+    business_passenger_count = 0
+    while normal_passenger_count < __random_passenger_count__:
+        # determine type of passenger. 5% chance to be Business Select (if available),
+        # 5% chance to be a child, 5% to be elderly
+        passenger_type = random.randint(1 if business_passenger_count < 15 else 6, 100)
+        if passenger_type in range(1, 6):
+            passenger = Passenger(is_business_select=True)
+            business_passenger_count += 1
+        else:
+            if passenger_type in range(6, 11) and normal_passenger_count <= __random_passenger_count__ - 2:
+                # child passenger(s) if enough capacity for at least 1 child and 1 adult
+                parent = ParentPassenger()
+                normal_passenger_count += 1
+                if random.randint(1, 100) >= 65 and len(__boarding_ids__) > 1:
+                    # 35% chance both parents/guardians are on the trip. Some families only have 1 parent,
+                    # or a grandparent or single individual may be accompanying minor
+                    parent.spouse = ParentPassenger(parent.last_name, spouse=parent)
+                    normal_passenger_count += 1
+
+                child_count_probability = random.randint(1, 100)
+                if child_count_probability in range(1, 41):
+                    # 40% chance of having 1 child
+                    # 40% chance of having 1 child
+                    child_count = 1
+                elif child_count_probability in range(41, 81):
+                    # 40% chance of having 2 children
+                    child_count = 2
+                elif child_count_probability in range(81, 96):
+                    # 15% chance of having 3 children
+                    child_count = 3
+                else:
+                    # 5% chance of having a larger family
+                    # with 4/5 young children
+                    child_count = random.randint(4, 6)
+
+                while normal_passenger_count < __random_passenger_count__ and len(parent.children) < child_count:
+                    parent.children.append(ChildPassenger(parent.last_name, parent=parent))
+                    normal_passenger_count += 1
+
+                if parent.spouse is not None:
+                    parent.spouse.children = parent.children
+
+            elif passenger_type in range(11, 15):
+                #  disabled passenger(s)
+                passenger = DisabledPassenger()
+                normal_passenger_count += 1
+                if normal_passenger_count < __random_passenger_count__ and random.randint(0, 1) == 1:
+                    passenger.attendant = AttendantPassenger(
+                        passenger.last_name if random.randint(1, 100) <= 75 else None, elder=passenger)
+                    normal_passenger_count += 1
+            else:
+                passenger = Passenger()
+                normal_passenger_count += 1
+    # ================================================================================================
 
 
 class Passenger:
-    def __init__(self, last_name=None):
+    def __init__(self, last_name=None, first_name=None, *, is_business_select=False):
         self.boarding_id = ""
-        self.first_name = names.get_first_name(('male' if random.randrange(2) == 0 else 'female'))
+        if first_name is None:
+            self.first_name = names.get_first_name(('male' if random.randint(0, 1) == 0 else 'female'))
+        else:
+            self.first_name = first_name
         if last_name is None:
             self.last_name = names.get_last_name()
         else:
@@ -70,17 +143,26 @@ class Passenger:
         # which can be recycled.
         self.confirmation_id = ""
 
-        # TODO MAKE SURE CONFIRMATION NUMBER IS UNIQUE, WILL CAUSE PROBLEMS WITH DICTIONARY IF NOT
-        for i in range(6):
-            if random.randrange(2) == 0:
-                # No 0 or 1, they can be confused with O and I
-                self.confirmation_id += chr(ord('2') + random.randrange(8))
-            else:
-                self.confirmation_id += chr(ord('A') + random.randrange(26))
+        self.confirmation_id = __available_confirmation_ids__.pop(0)
+        self.is_business_select = is_business_select
+        __passenger_list__.append(self)
 
-    def __boarding_id_number__(self):
-        if not isinstance(self.boarding_id, str):
-            print("Somehow this isn't a string")
+    def check_in(self, next_available=True):
+        # returns True if already checked in or boarding already started
+        if (self.boarding_id is None or self.boarding_id == "") and check_in_begun():
+            if self.is_business_select:
+                self.boarding_id = __reserved_ids__.pop(0)
+                return True
+            elif next_available or len(__boarding_ids__) == 1:
+                self.boarding_id = __boarding_ids__.pop(0)
+                return True
+            else:
+                self.boarding_id = __boarding_ids__.pop(random.randint(0, len(__boarding_ids__) - 1))
+                return True
+            return True
+        return False
+
+    def boarding_id_number(self):
         if self.boarding_id == "":
             return 7000
         value = int(self.boarding_id[1:])
@@ -130,41 +212,59 @@ class Passenger:
             value += 6000
         return value
 
-    def __group_boarding_id_number__(self):
-        value = self.__boarding_id_number__()
+    def group_boarding_id_number(self):
+        value = self.boarding_id_number()
         if isinstance(self, DisabledPassenger):
-            if self.attendant is None or (self.attendant.__boarding_id_number__() < self.__boarding_id_number__()):
+            if self.attendant is None or (self.attendant.boarding_id_number() < self.boarding_id_number()):
                 return value
             else:
-                return self.attendant.__boarding_id_number__()
+                return self.attendant.boarding_id_number()
         elif isinstance(self, AttendantPassenger):
-            if self.elder.__boarding_id_number__() < value:
+            if self.elder.boarding_id_number() < value:
                 return value
             else:
-                return self.elder.__boarding_id_number__()
+                return self.elder.boarding_id_number()
         elif isinstance(self, ParentPassenger):
-            if self.spouse is not None and self.spouse.__boarding_id_number__() > value:
-                value = self.spouse.__boarding_id_number__()
+            if self.spouse is not None and self.spouse.boarding_id_number() > value:
+                value = self.spouse.boarding_id_number()
             for child in self.children:
-                if child.__boarding_id_number__() > value:
-                    value = child.__boarding_id_number__()
+                if child.boarding_id_number() > value:
+                    value = child.boarding_id_number()
             return value
         elif isinstance(self, ChildPassenger):
-            if self.__parent__.__boarding_id_number__() > value:
-                value = self.__parent__.__boarding_id_number__()
-            if self.__parent__.spouse is not None and self.__parent__.spouse.__boarding_id_number__() > value:
-                value = self.__parent__.spouse.__boarding_id_number__()
+            if self.__parent__.boarding_id_number() > value:
+                value = self.__parent__.boarding_id_number()
+            if self.__parent__.spouse is not None and self.__parent__.spouse.boarding_id_number() > value:
+                value = self.__parent__.spouse.boarding_id_number()
             for child in self.__parent__.children:
-                if child.__boarding_id_number__() > value:
-                    value = child.__boarding_id_number__()
+                if child.boarding_id_number() > value:
+                    value = child.boarding_id_number()
             return value
         else:
             return value
 
+    def boarding_group(self):
+        if isinstance(self, DisabledPassenger) and self.has_assistive_device:
+            return "Preboard"
+        elif isinstance(self, AttendantPassenger) and self.elder.has_assistive_device:
+            return "Preboard"
+        elif self.is_business_select or self.group_boarding_id_number() < 3000:
+            return "A"
+        elif self.group_boarding_id_number() < 4000:
+            return "Extra Time"
+        elif self.group_boarding_id_number() < 5000:
+            return "Family Boarding"
+        elif self.group_boarding_id_number() < 6000:
+            return "B"
+        elif self.group_boarding_id_number() < 7000:
+            return "C"
+
+        return "To Be Determined"
+
     def upgrade(self):
         if isinstance(self, ParentPassenger) or isinstance(self, ChildPassenger):
             return False
-        elif self.__group_boarding_id_number__() < 2116:
+        elif self.group_boarding_id_number() < 2116:
             # already upgraded or disabled/attendant with assistive device
             return False
         elif len(__reserved_ids__) == 0:
@@ -180,259 +280,198 @@ class Passenger:
         return not self == other
 
     def __gt__(self, other):
-        myValue = self.__group_boarding_id_number__()
-        otherValue = other.__group_boarding_id_number__()
-        if myValue != otherValue:
-            return myValue > otherValue
+        my_value = self.group_boarding_id_number()
+        other_value = other.group_boarding_id_number()
+        if my_value != other_value:
+            return my_value > other_value
         else:
-            return self.__boarding_id_number__() > other.__boarding_id_number__()
+            return self.boarding_id_number() > other.boarding_id_number()
 
     def __ge__(self, other):
-        myValue = self.__group_boarding_id_number__()
-        otherValue = other.__group_boarding_id_number__()
-        if myValue != otherValue:
-            return myValue >= otherValue
+        my_value = self.group_boarding_id_number()
+        other_value = other.group_boarding_id_number()
+        if my_value != other_value:
+            return my_value >= other_value
         else:
-            return self.__boarding_id_number__() >= other.__boarding_id_number__()
+            return self.boarding_id_number() >= other.boarding_id_number()
 
     def __lt__(self, other):
-        myValue = self.__group_boarding_id_number__()
-        otherValue = other.__group_boarding_id_number__()
-        if myValue != otherValue:
-            return myValue < otherValue
+        my_value = self.group_boarding_id_number()
+        other_value = other.group_boarding_id_number()
+        if my_value != other_value:
+            return my_value < other_value
         else:
-            return self.__boarding_id_number__() < other.__boarding_id_number__()
+            return self.boarding_id_number() < other.boarding_id_number()
 
     def __le__(self, other):
-        myValue = self.__group_boarding_id_number__()
-        otherValue = other.__group_boarding_id_number__()
-        if myValue != otherValue:
-            return myValue <= otherValue
+        my_value = self.group_boarding_id_number()
+        other_value = other.group_boarding_id_number()
+        if my_value != other_value:
+            return my_value <= other_value
         else:
-            return self.__boarding_id_number__() <= other.__boarding_id_number__()
+            return self.boarding_id_number() <= other.boarding_id_number()
 
 
 class ChildPassenger(Passenger):
-    def __init__(self, last_name=None):
-        super(ChildPassenger, self).__init__(last_name)
-        self.__parent__ = None
+    def __init__(self, last_name=None, first_name=None, parent=None):
+        super(ChildPassenger, self).__init__(last_name, first_name)
+        self.__parent__ = parent
 
 
 class ParentPassenger(Passenger):
-    def __init__(self, last_name=None):
-        super(ParentPassenger, self).__init__(last_name)
-        self.spouse = None
-        self.children = list()
+    def __init__(self, last_name=None, first_name=None, children=None, spouse=None):
+        super(ParentPassenger, self).__init__(last_name, first_name)
+        if children is None:
+            self.children = list()
+        else:
+            self.children = children
+        self.spouse = spouse
 
 
 class DisabledPassenger(Passenger):
-    def __init__(self, last_name=None):
-        super(DisabledPassenger, self).__init__(last_name)
-        # 50% chance disabled person will have an assistive device
-        self.has_assistive_device = random.randint(0, 1) == 1
+    def __init__(self, last_name=None, first_name=None, has_assistive_device=None, attendant=None):
+        super(DisabledPassenger, self).__init__(last_name, first_name)
+        if has_assistive_device is None:
+            # 50% chance disabled person will have an assistive device
+            self.has_assistive_device = random.randint(0, 1) == 1
+        else:
+            self.has_assistive_device = has_assistive_device
+
+        self.attendant = attendant
         self.extra_time = False
-        self.attendant = None
 
 
 class AttendantPassenger(Passenger):
-    def __init__(self, last_name=None):
-        super(AttendantPassenger, self).__init__(last_name)
-        self.elder = None
+    def __init__(self, last_name=None, first_name=None, elder=None):
+        super(AttendantPassenger, self).__init__(last_name, first_name)
+        self.elder = elder
 
 
 def book_seats():
+    abort_message = ""
+    original_size = len(__manual_entry_passenger_list__)
+    passenger = None
     my_list = list()
-    print("SEATS AVAILABLE:", business_select_seats_available(), "Business Select |", gotta_get_away_seats_available(), "Gotta Get Away")
+    print("SEATS AVAILABLE:", business_select_seats_available(), "Business Select |", wanna_get_away_seats_available(),
+          "Wanna Get Away")
     print("NOTE: Business Select not available for disabled individuals or families.")
     last_name = input("\tWhat is your Last Name? ")
     first_name = input("\tWhat is your First Name? ")
-    if input("\tAre you disabled [Y/N]? ") in "Yy":
-        if gotta_get_away_seats_available() > 0:
-            passenger = DisabledPassenger(last_name)
-            passenger.first_name = first_name
-            passenger.has_assistive_device = input("\tDo you have an Assistive Device [Y/N]? ") in "Yy"
-            if input("\tWill an Attendant be accompanying you [Y/N]? ") in "Yy":
-                if gotta_get_away_seats_available() > 1:
-                    last_name = input("\t\tAttendant Last Name: ")
-                    first_name = input("\t\tAttendant First Name: ")
-                    attendant = AttendantPassenger(last_name)
-                    attendant.first_name = first_name
-                    passenger.attendant = attendant
-                    attendant.elder = passenger
-                    my_list.append(passenger)
-                    my_list.append(attendant)
-                else:
-                    print("\tSorry, not enough seats available.")
-                    if input("\t\tWould you still like to fly alone [Y/N]? ") in "Yy":
-                        my_list.append(passenger)
-        else:
-            print("\tSorry, no seats available.")
-    elif input("\tAre you traveling with children younger than 7 years of age [Y/N]? ") in "Yy":
-        if gotta_get_away_seats_available() > 1:
-            passenger = ParentPassenger(last_name)
-            passenger.first_name = first_name
-            parent_count = 1
-            child_count = int(input("\t\tHow may children 6- are flying with you? "))
-            abort = False
-            if input("\t\tWill a spouse be accompanying you as well [Y/N]? ") in "Yy":
-                abort = False
-                if child_count + 2 > gotta_get_away_seats_available():
-                    print("\t\tSorry, not enough seats for spouse.")
-                    if input("\t\tDo you wish to continue [Y/N]? ") in "Yy":
-                        my_list.append(passenger)
-                    else:
-                        abort = True
-                else:
-                    last_name = input("\t\t\tSpouse's Last Name: ")
-                    first_name = input("\t\t\tSpouse's First Name: ")
-                    spouse = ParentPassenger(last_name)
-                    spouse.first_name = first_name
-                    passenger.spouse = spouse
-                    spouse.spouse = passenger
-                    my_list.append(passenger)
-                    my_list.append(spouse)
-                    parent_count += 1
+    if wanna_get_away_seats_available() > 0 and input("\tAre you disabled [Y/N]? ") in "Yy":
+        passenger = DisabledPassenger(last_name, first_name,
+                                      has_assistive_device=input(
+                                          "\tDo you have an Assistive Device [Y/N]? ") in "Yy")
+        if input("\tWill an Attendant be accompanying you [Y/N]? ") in "Yy":
+            if wanna_get_away_seats_available() > 1:
+                print("\t\tLeave last name blank to use '" + passenger.last_name + "'")
+                last_name = input("\t\tAttendant Last Name: ")
+                if last_name == "":
+                    last_name = passenger.last_name
+                first_name = input("\t\tAttendant First Name: ")
+                passenger.attendant = AttendantPassenger(last_name, first_name, passenger)
+                __manual_entry_passenger_list__.append(passenger)
+                __manual_entry_passenger_list__.append(passenger.attendant)
             else:
-                my_list.append(passenger)
-            if child_count + parent_count <= gotta_get_away_seats_available() and not abort:
-                children = list()
-                for i in range(1, child_count + 1):
-                    last_name = input("\t\tChild " + str(i) + " Last Name: ")
-                    first_name = input("\t\tChild " + str(i) + " First Name: ")
-                    child = ChildPassenger(last_name)
-                    child.first_name = first_name
-                    child.__parent__ = passenger
-                    children.append(child)
-                    my_list.append(child)
-                passenger.children = children
-                if passenger.spouse is not None:
-                    passenger.spouse.children = children
-            else:
-                my_list.remove(passenger)
-                print("\t\tSorry, not enough seats available.")
+                print("\tSorry, not enough seats available for attendant.")
+                if input("\t\tWould you still like to fly alone [Y/N]? ") in "Yy":
+                    __manual_entry_passenger_list__.append(passenger)
+                else:
+                    __passenger_list__.remove(passenger)
+                    abort_message = "Sorry, not enough seats available for attendant."
         else:
-            print("\tSorry, no seats available.")
-    else:
-        passenger = Passenger(last_name)
-        passenger.first_name = first_name
-        if business_select_seats_available() > 0 and input("\tIs this a Business Select Ticket [Y/N]? ") in "Yy":
-            passenger.boarding_id = __reserved_ids__.pop(0)
-            my_list.append(passenger)
-            checkin(passenger, business_select=True)
-        elif gotta_get_away_seats_available() > 0:
-            my_list.append(passenger)
-        else:
-            print("\tSorry, no seats available.")
-    if len(my_list) > 0:
-        for passenger in my_list:
             __manual_entry_passenger_list__.append(passenger)
-            if passenger.boarding_id == "":
-                __boarding_ids__.append(__unused_boarding_ids__.pop(0))
-                if checkin_begun():
-                    print("Checking In")
-                    checkin(passenger)
-                else:
-                    __manual_entry_unassigned__.append(passenger)
-        if checkin_begun():
-            if not 2101 <= passenger.__boarding_id_number__() <= 2115:
-                print("Check-in has already started.")
-                print("You were assigned the next available boarding group/number(s)")
-                print("for your Gotta Get Away tickets. You may upgrade at the gate kiosk")
-                print("if there are Business Select tickets still available, and you aren't")
-                print("disabled or flying with children.")
-
-    return my_list
-
-
-# random number of passengers that ensures at least 1 passenger will have the Boarding ID B1
-def checkin(passenger, next_available=True, business_select=False):
-    if passenger.boarding_id is None or passenger.boarding_id == "":
-        if business_select:
-            passenger.boarding_id = __reserved_ids__.pop(0)
-        elif next_available:
-            passenger.boarding_id = __boarding_ids__.pop(0)
-        else:
-            passenger.boarding_id = __boarding_ids__.pop(random.randint(0, len(__boarding_ids__)-1))
-    __passenger_list__.append(passenger)
-
-
-def open_checkin_window():
-    __checkin__.append(True)
-    passengers = list()
-    if len(__manual_entry_unassigned__) > 0:
-        for passenger in __manual_entry_unassigned__:
-            checkin(passenger, next_available=False)
-        __manual_entry_unassigned__.clear()
-    while len(__boarding_ids__) > 0:
-        # determine type of passenger. 5% chance to be Business Select (if available),
-        # 5% chance to be a child, 5% to be elderly
-        passenger_type = random.randrange(1 if len(__reserved_ids__) > 0 else 6, 101)
-        if passenger_type in range(1, 5) and len(__reserved_ids__) > 0:
-            passenger = Passenger()
-            passenger.boarding_id = __reserved_ids__.pop(0)
-            passengers.append(passenger)
-        else:
-            if passenger_type in range(6, 11) and len(__boarding_ids__) > 1:
-                # child passenger(s) if enough capacity for at least 1 child and 1 adult
-                parent = ParentPassenger()
-                checkin(parent, True)
-                passengers.append(parent)
-                if random.randint(1, 100) >= 65 and len(__boarding_ids__) > 1:
-                    # 35% chance both parents/guardians are on the trip. Some families only have 1 parent,
-                    # or a grandparent or single individual may be accompanying minor
-                    parent.spouse = ParentPassenger(parent.last_name)
-                    parent.spouse.spouse = parent
-                    checkin(parent.spouse, False)
-                    passengers.append(parent.spouse)
-                else:
-                    parent.spouse = None
-
-                children = list()
-                child_count_probability = random.randrange(1, 101)
-                if child_count_probability in range(1, 41):
-                    # 40% chance of having 1 child
-                    # 40% chance of having 1 child
-                    child_count = 1
-                elif child_count_probability in range(41, 81):
-                    # 40% chance of having 2 children
-                    child_count = 2
-                elif child_count_probability in range(81, 96):
-                    # 15% chance of having 3 children
-                    child_count = 3
-                else:
-                    # 5% chance of having a larger family
-                    # with 4/5 young children
-                    child_count = random.randint(4, 6)
-
-                while len(__boarding_ids__) > 0 and child_count > 0:
-                    child = ChildPassenger(parent.last_name)
-                    child.__parent__ = parent
-                    children.append(child)
-                    child_count -= 1
-                    checkin(child, False)
-                    passengers.append(child)
-
-                parent.children = children
-                if parent.spouse is not None:
-                    parent.spouse.children = children
-                passenger = parent
-
-            elif passenger_type in range(11, 15):
-                #  disabled passenger(s)
-                passenger = DisabledPassenger()
-                checkin(passenger)
-                passengers.append(passenger)
-                if random.randint(0, 1) == 1 and len(__boarding_ids__) > 1:
-                    passenger.attendant = AttendantPassenger(passenger.last_name)
-                    passenger.attendant.elder = passenger
-                    checkin(passenger.attendant, False)
-                    passengers.append(passenger.attendant)
-                else:
-                    passenger.attendant = None
+    elif wanna_get_away_seats_available() > 1 and \
+            input("\tFlying with children 6- [Y/N]? ") in "Yy":
+        passenger = ParentPassenger(last_name, first_name)
+        __manual_entry_passenger_list__.append(passenger)
+        parent_count = 1
+        child_count = int(input("\t\tHow may children 6- are flying with you? "))
+        if child_count > wanna_get_away_seats_available():
+            abort_message = "Sorry, not enough seats available for " + str(child_count) + " children."
+        elif input("\t\tWill a spouse be accompanying you as well [Y/N]? ") in "Yy":
+            if child_count + 1 > wanna_get_away_seats_available():
+                print("\t\tSorry, not enough seats for spouse.")
+                if not input("\t\tDo you wish to continue [Y/N]? ") in "Yy":
+                    abort_message = "Sorry, not enough seats available for your spouse."
             else:
-                passenger = Passenger()
-                checkin(passenger)
-                passengers.append(passenger)
+                print("\t\t\tLeave last name blank to use '" + passenger.last_name + "'")
+                last_name = input("\t\t\tSpouse's Last Name: ")
+                if last_name == "":
+                    last_name = passenger.last_name
+                first_name = input("\t\t\tSpouse's First Name: ")
+                passenger.spouse = ParentPassenger(last_name, first_name, spouse=passenger)
+                __manual_entry_passenger_list__.append(passenger.spouse)
+                parent_count += 1
+        if child_count + parent_count <= wanna_get_away_seats_available() and abort_message == "":
+            children = list()
+            print("\t\tLeave last name blank to use '" + passenger.last_name + "'")
+            for i in range(1, child_count + 1):
+                last_name = input("\t\tChild " + str(i) + " Last Name: ")
+                if last_name == "":
+                    last_name = passenger.last_name
+                first_name = input("\t\tChild " + str(i) + " First Name: ")
+                child = ChildPassenger(last_name, first_name, parent=passenger)
+                children.append(child)
+                __manual_entry_passenger_list__.append(child)
+            passenger.children = children
+            if passenger.spouse is not None:
+                passenger.spouse.children = children
+    elif business_select_seats_available() > 0 and input("\tIs this a Business Select Ticket [Y/N]? ") in "Yy":
+        passenger = Passenger(last_name, first_name, is_business_select=True)
+        __manual_entry_passenger_list__.append(passenger)
+    elif wanna_get_away_seats_available() > 0:
+        passenger = Passenger(last_name, first_name)
+        __manual_entry_passenger_list__.append(passenger)
+    else:
+        abort_message = "Sorry, no seats available."
+        return False
+    if abort_message != "":
+        print('\t' + abort_message)
+    elif input("CONFIRM BOOKING [Y/N]? ") not in "Yy":
+        abort_message = "Booking Aborted By User"
+
+    if abort_message != "":
+        __passenger_list__.remove(passenger)
+        __manual_entry_passenger_list__.remove(passenger)
+        if isinstance(passenger, ParentPassenger):
+            for passenger in passenger.children:
+                __passenger_list__.remove(passenger)
+                __manual_entry_passenger_list__.remove(passenger)
+            if passenger.spouse is not None:
+                __passenger_list__.remove(passenger.spouse)
+                __manual_entry_passenger_list__.remove(passenger)
+        elif isinstance(passenger, DisabledPassenger) and passenger.attendant is not None:
+            __passenger_list__.remove(passenger.attendant)
+            __manual_entry_passenger_list__.remove(passenger.attendant)
+        return False
+    if check_in_begun():
+        for passenger in __manual_entry_passenger_list__:
+            passenger.check_in()
+        if not 2101 <= passenger.boarding_id_number() <= 2115:
+            print("Check-in has already started.")
+            print("You were assigned the next available boarding group/number(s)")
+            print("for your Wanna Get Away tickets. You may upgrade at the gate kiosk")
+            print("if there are Business Select tickets still available, and you aren't")
+            print("disabled or flying with children.")
+    return len(__manual_entry_passenger_list__) > original_size
 
 
-reset_passenger_list()
+def open_check_in_window():
+    if not check_in_begun():
+        __check_in__.append(True)
+        unused_boarding_ids = list()
+        seats_available = wanna_get_away_seats_available()
+        randomized_ppl = list()
+        for passenger in __passenger_list__:
+            if passenger.is_business_select and passenger.boarding_id == "":
+                passenger.check_in()
+            elif not passenger.is_business_select and passenger.boarding_id == "":
+                randomized_ppl.append(passenger)
+        while len(randomized_ppl) > 0:
+            randomized_ppl[0].boarding_id = __boarding_ids__.pop(random.randint(0, len(randomized_ppl) - 1))
+            randomized_ppl.pop(0)
+        return True
+    return False
+
+
+reset_flight()
