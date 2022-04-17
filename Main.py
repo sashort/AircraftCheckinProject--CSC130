@@ -2,7 +2,7 @@ import Flight
 import time
 
 
-def display_passenger_list(look_at):
+def display_passenger_list(look_at, title="PASSENGER LIST"):
     lLen = 4
     fLen = 5
     bLen = 14
@@ -15,7 +15,7 @@ def display_passenger_list(look_at):
             bLen = len(passenger.boarding_group())
     top = "    ------ --- " + "--------------".rjust(bLen, "-") + " " + "".rjust(lLen, "-") + " " + "".rjust(fLen, "-")
     print("".rjust(len(top), "-"))
-    print("PASSENGER LIST".center(len(top)))
+    print(title.center(len(top)))
     print("Business Select Seats Available:", str(Flight.business_select_seats_available()).rjust(3) + "/ 15")
     print(" Wanna get Away Seats Available:", str(Flight.wanna_get_away_seats_available()).rjust(3) + "/135")
     time.sleep(.5)
@@ -70,7 +70,7 @@ while True:
         pass
         #TODO links with gate kiosk. Here you can upgrade passengers to Business Select and Disabled people can request "Extra Time" status
     elif value == "4":
-        display_passenger_list(Flight.get_my_passenger_list())
+        display_passenger_list(Flight.get_my_passenger_list(), "MY PASSENGER LIST")
     elif value == "5":
         display_passenger_list(Flight.get_passenger_list())
     elif value == "6":
@@ -80,8 +80,6 @@ while True:
         # resets flight. All custom passengers will be lost.
         Flight.reset_flight()
         message = "Flight has been reset!"
-    elif value == "8":
-        print(Flight.__boarding_ids__)
     elif value == "0":
         break
     # time.sleep(2)
