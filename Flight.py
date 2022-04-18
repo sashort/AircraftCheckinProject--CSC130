@@ -180,8 +180,8 @@ class Passenger:
         elif self.boarding_id[0:1] == 'C':
             value += 300
 
-        if (isinstance(self, DisabledPassenger) and self.has_assistive_device) or (
-                isinstance(self, AttendantPassenger) and self.elder.has_assistive_device):
+        if (isinstance(self, DisabledPassenger) and (self.has_assistive_device or self.attendant is not None)) or \
+                isinstance(self, AttendantPassenger):
             value += 1000
         elif (isinstance(self, DisabledPassenger) and self.extra_time) or (
                 isinstance(self, AttendantPassenger) and self.elder.extra_time):
@@ -222,20 +222,20 @@ class Passenger:
     def group_boarding_id_number(self):
         value = self.boarding_id_number()
         if isinstance(self, DisabledPassenger):
-            if self.extra_time or self.has_assistive_device:
+            if self.attendant is None:
                 return value
-            elif self.attendant is not None and self.attendant.boarding_id_number() > self.boarding_id_number():
-                return self.attendant.boarding_id_number()
+            elif value > self.attendant.boarding_id_number():
+                return value
             else:
-                return value
+                return self.attendant.boarding_id_number()
         elif isinstance(self, AttendantPassenger):
             # Attendant might not be in the same boarding order if elder
             # does not have an assistive implement, and hasn't been granted
             # extra time.
-            if self.elder.extra_time or self.elder.has_assistive_device:
-                return self.elder.boarding_id_number()
-            else:
+            if value > self.elder.boarding_id_number():
                 return value
+            else:
+                return self.elder.boarding_id_number()
         elif isinstance(self, ParentPassenger):
             if self.spouse is not None and self.spouse.boarding_id_number() > value:
                 value = self.spouse.boarding_id_number()
@@ -256,9 +256,9 @@ class Passenger:
             return value
 
     def boarding_group(self):
-        if isinstance(self, DisabledPassenger) and self.has_assistive_device:
+        if isinstance(self, DisabledPassenger) and (self.has_assistive_device or self.attendant is not None):
             return "Preboard"
-        elif isinstance(self, AttendantPassenger) and self.elder.has_assistive_device:
+        elif isinstance(self, AttendantPassenger):
             return "Preboard"
         elif self.is_business_select or self.group_boarding_id_number() < 3000:
             return "A"
