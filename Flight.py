@@ -1,6 +1,6 @@
 import names
 import random
-
+import time
 __MAX_BUSINESS_SELECT_SEATS__ = 15
 __MAX_WANNA_GET_AWAY_SEATS__ = 135
 __MAX_SEATS__ = 150
@@ -222,7 +222,6 @@ def book_seats():
                 if input("\t\tWould you still like to fly alone [Y/N]? ") in "Yy":
                     new_passengers.append(passenger)
                 else:
-                    new_passengers.remove(passenger)
                     abort_message = "Sorry, not enough seats available for attendant."
     elif wanna_get_away_seats_available() > 1 and \
             input("\tFlying with children 6- [Y/N]? ") in "Yy":
@@ -232,13 +231,11 @@ def book_seats():
         child_count = int(input("\t\tHow may children 6- are flying with you? "))
         if child_count > wanna_get_away_seats_available():
             abort_message = "Sorry, not enough seats available for " + str(child_count) + " children."
-            new_passengers.remove(passenger)
         elif input("\t\tWill a spouse be accompanying you as well [Y/N]? ") in "Yy":
             if child_count + 1 > wanna_get_away_seats_available():
                 print("\t\tSorry, not enough seats for spouse.")
-                if not input("\t\tDo you wish to continue [Y/N]? ") in "Nn":
+                if input("\t\tDo you wish to continue [Y/N]? ") in "Nn":
                     abort_message = "Sorry, not enough seats available for your spouse."
-                    new_passengers.remove(passenger)
             else:
                 print("\t\t\tLeave last name blank to use '" + passenger.last_name + "'")
                 last_name = input("\t\t\tSpouse's Last Name: ")
@@ -274,9 +271,10 @@ def book_seats():
         return False
     if abort_message != "":
         print('\t' + abort_message)
+        time.sleep(3)
     elif input("CONFIRM BOOKING [Y/N]? ") not in "Yy":
         abort_message = "Booking Aborted By User"
-
+        time.sleep(3)
     if abort_message != "":
         __passenger_list__.remove(passenger)
         new_passengers.remove(passenger)
