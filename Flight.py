@@ -554,10 +554,11 @@ class DisabledPassenger(Passenger):
         if self.extra_time:
             return True
         elif self.has_assistive_device or self.attendant is not None:
+            return False
+        else:
             self.extra_time = True
             return True
-        else:
-            return False
+
 
 
 class AttendantPassenger(Passenger):
