@@ -29,6 +29,7 @@ def get_my_passenger_list():
 def get_passenger_dict():
     return __passenger_dictionary__
 
+
 def get_boarding_groups():
     preboard = False
     a = False
@@ -41,7 +42,7 @@ def get_boarding_groups():
             preboard = True
         elif passenger.boarding_group == "A":
             a = True
-        elif passenger.boarding_group == "Extra Time"
+        elif passenger.boarding_group == "Extra Time":
             extra_time = True
         elif passenger.boarding_group == "Family Boarding":
             family_boarding = True
@@ -65,6 +66,7 @@ def get_boarding_groups():
         values.append("C")
     return values
 
+
 def get_passengers_in_boarding_group(boarding_group):
     passengers = list()
     for passenger in __passenger_list__:
@@ -74,8 +76,9 @@ def get_passengers_in_boarding_group(boarding_group):
     # Generate Unsorted/Random list of passengers in boarding group
     random_ordered_passengers = list()
     while len(passengers) > 0:
-        random_ordered_passengers.append(passengers.pop(random.randint(0,len(passengers)-1)))
+        random_ordered_passengers.append(passengers.pop(random.randint(0, len(passengers) - 1)))
     return random_ordered_passengers
+
 
 def business_select_seats_available():
     available = __MAX_BUSINESS_SELECT_SEATS__
@@ -294,12 +297,14 @@ def book_seats():
         if check_in_begun():
             p.check_in()
 
-    if check_in_begun() and not 2101 <= passenger.boarding_id_number() <= 2115:
+    if check_in_begun() and not passenger.is_business_select and \
+            not passenger(isinstance(passenger, ParentPassenger)) and \
+            not passenger(isinstance(passenger, ChildPassenger)) and \
+            not passenger(isinstance(passenger, DisabledPassenger)) and \
+            not passenger(isinstance(passenger, AttendantPassenger)):
         print("Check-in has already started.")
         print("You were assigned the next available boarding group/number(s)")
-        print("for your Wanna Get Away tickets. You may upgrade at the gate kiosk")
-        print("if there are Business Select tickets still available, and you aren't")
-        print("disabled or flying with children.")
+        print("for your Wanna Get Away tickets. You may upgrade at the gate kiosk.")
     new_passengers.clear()
     return len(__my_passenger_list__) > original_size
 
@@ -314,7 +319,8 @@ def open_check_in_window():
             elif not passenger.is_business_select and passenger.boarding_id == "":
                 randomized_board_list.append(passenger)
         while len(randomized_board_list) > 0:
-            randomized_board_list[0].boarding_id = __available_wanna_get_away_boarding_ids__.pop(random.randint(0, len(randomized_board_list) - 1))
+            randomized_board_list[0].boarding_id = __available_wanna_get_away_boarding_ids__.pop(
+                random.randint(0, len(randomized_board_list) - 1))
             randomized_board_list.pop(0)
         return True
     return False
@@ -350,7 +356,8 @@ class Passenger:
                 self.boarding_id = __available_wanna_get_away_boarding_ids__.pop(0)
                 return True
             else:
-                self.boarding_id = __available_wanna_get_away_boarding_ids__.pop(random.randint(0, len(__available_wanna_get_away_boarding_ids__) - 1))
+                self.boarding_id = __available_wanna_get_away_boarding_ids__.pop(
+                    random.randint(0, len(__available_wanna_get_away_boarding_ids__) - 1))
                 return True
             return True
         return False
@@ -559,8 +566,6 @@ class AttendantPassenger(Passenger):
     def __init__(self, last_name=None, first_name=None, elder=None):
         super(AttendantPassenger, self).__init__(last_name, first_name)
         self.elder = elder
-
-
 
 
 reset_flight()
