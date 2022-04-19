@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="78cm" height="36cm" viewBox="19 18 1548 716" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #ffffff" x="83" y="387" width="491.45" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="83" y="387" width="491.45" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="328.725" y="406">Flight</text>
+    <rect style="fill: #ffffff" x="83" y="415" width="491.45" height="52"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="83" y="415" width="491.45" height="52"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="86" y="429">+check_in_begun(): boolean</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="86" y="445">+business_select_seats_available(): int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="86" y="461">+wanna_get_away_seats_available(): int</text>
+    <rect style="fill: #ffffff" x="83" y="467" width="491.45" height="265"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="83" y="467" width="491.45" height="265"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="86" y="481">+reset_flight()</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="86" y="495.5">clears all passengers, including yours.</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="86" y="509.5">Reinitailizes the flight and repopulates with a varying random set of passenger types.</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="86" y="532">+book_seats()</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="86" y="546.5">method for manually adding Passenger data.</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="86" y="560.5">Can be retrieved using Flight.get_my_passenger_list()</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="86" y="583">+open_check_in_window()</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="86" y="599">+get_passengers_in_boarding_group(boarding_group:string)</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="86" y="615">+get_passenger_list(): list of Passenger</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="86" y="631">+get_my_passenger_list(): list of Passenger</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="86" y="645.5">only the passengers you created</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="86" y="668">+get_passenger_dict(): dictionary { string: Passenger}</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="86" y="682.5">Passenger.confirmation_id are the keys</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="86" y="705">+get_boarding_groups(): list of string</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="86" y="719.5">Returns 0-any of the following: Preboard, A, Family Boarding, B, C</text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="870" y="19" width="573.95" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="870" y="19" width="573.95" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1156.98" y="38">GateKiosk</text>
+    <rect style="fill: #ffffff" x="870" y="47" width="573.95" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="870" y="47" width="573.95" height="8"/>
+    <rect style="fill: #ffffff" x="870" y="55" width="573.95" height="122"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="870" y="55" width="573.95" height="122"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="873" y="69">+show_menu()</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="873" y="85">+upgrade_passenger(): string</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="873" y="99.5">uses Flight.get_passenger_dict() to lookup passenger, and call its upgrade method. Return string</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="873" y="113.5">should be a message returned to GateDesk.show_menu() indicating success or failure.</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="873" y="136">+grant_extra_time()</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="873" y="150.5">uses Flight.get_passenger_dict() to lookup passenger, and call its request_extra_time() method.</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="873" y="164.5">Return string should be a message returned to GateDesk.show_menu() indicating success or failure.</text>
+  </g>
+  <g>
+    <polygon style="fill: #add8e6" points="870,219 1553.6,219 1565.6,231 1565.6,365 870,365 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="870,219 1553.6,219 1565.6,231 1565.6,365 870,365 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" points="1553.6,219 1553.6,231 1565.6,231 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="877" y="243.9">
+      <tspan x="877" y="243.9">grant_extra_time() method needs to use isinstance(passenger, Flight.DisabledPassenger)</tspan>
+      <tspan x="877" y="259.9">to determine if passenger is disabled. If the passenger isn't of DisabledPassenger type,</tspan>
+      <tspan x="877" y="275.9">an runtime error will occur if you attempt to call request_extra_time().</tspan>
+      <tspan x="877" y="291.9"></tspan>
+      <tspan x="877" y="307.9">Criteria for successful DisabledPassenger.request_extra_time():</tspan>
+      <tspan x="877" y="323.9">1) isinstance(passenger, DisabledPassenger) = True</tspan>
+      <tspan x="877" y="339.9">2) passenger.has_assistive_device = False</tspan>
+      <tspan x="877" y="355.9">3) passenger.attendant = None</tspan>
+    </text>
+  </g>
+  <g>
+    <polygon style="fill: #add8e6" points="870,379 1299.5,379 1311.5,391 1311.5,477 870,477 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="870,379 1299.5,379 1311.5,391 1311.5,477 870,477 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" points="1299.5,379 1299.5,391 1311.5,391 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="877" y="403.9">
+      <tspan x="877" y="403.9">Criteria for successful passenger upgrades:</tspan>
+      <tspan x="877" y="419.9">1) passenger is not disabled or an attendant to one</tspan>
+      <tspan x="877" y="435.9">2) passenger is not a parent or child</tspan>
+      <tspan x="877" y="451.9">3) passenger hasn't already upgraded</tspan>
+      <tspan x="877" y="467.9">4) There is at least 1 Business Select ticket available</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="20" y="20" width="610.6" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="20" y="20" width="610.6" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="325.3" y="39">Main</text>
+    <rect style="fill: #ffffff" x="20" y="48" width="610.6" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="20" y="48" width="610.6" height="8"/>
+    <rect style="fill: #ffffff" x="20" y="56" width="610.6" height="78"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="20" y="56" width="610.6" height="78"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="23" y="70">+main()</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="23" y="84.5">The main menu for the program</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="23" y="107">+display_passenger_list(look_at:list of Passenger,title:string=PASSENGER LIST)</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="23" y="121.5">Can be called from other modules to display any list of passengers</text>
+  </g>
+  <g>
+    <polygon style="fill: #add8e6" points="20,140 680.5,140 692.5,152 692.5,302 20,302 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="20,140 680.5,140 692.5,152 692.5,302 20,302 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" points="680.5,140 680.5,152 692.5,152 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="27" y="164.9">
+      <tspan x="27" y="164.9">The Main Menu contains the following:</tspan>
+      <tspan x="27" y="180.9">0 Exit</tspan>
+      <tspan x="27" y="196.9">1 Book Seats... calls Flight.book_seats()</tspan>
+      <tspan x="27" y="212.9">2 Open Check-In Window... calls Flight.open_chekin_window()</tspan>
+      <tspan x="27" y="228.9">3 Gate Kiosk Menu... calls GateKiosk.show_menu()</tspan>
+      <tspan x="27" y="244.9">4 View My Flight Info... calls display_passenger_list(Flight.get_my_passenger_list())</tspan>
+      <tspan x="27" y="260.9">5. View All Flight Info... similar to 4) shows all passengers</tspan>
+      <tspan x="27" y="276.9">6. Board Passengers... calls BoardingWindow.queue_and_board</tspan>
+      <tspan x="27" y="292.9">7. Reset flight: calls Flight.reset_flight()</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="880" y="520" width="511.3" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="880" y="520" width="511.3" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1135.65" y="539">BoardingWindow</text>
+    <rect style="fill: #ffffff" x="880" y="548" width="511.3" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="880" y="548" width="511.3" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="883" y="562">-boarding_queue: priority queue of Passenger</text>
+    <rect style="fill: #ffffff" x="880" y="568" width="511.3" height="125"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="880" y="568" width="511.3" height="125"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="883" y="582">+queue_and_board()</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="883" y="596.5">iterates through Flight.get_boarding_groups() using</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="883" y="610.5">for bg in Flight.get_boarding groups:</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="883" y="624.5">1. Input should be required at the beginning of the loop to indicate</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="883" y="638.5">"Press Any Key To Begin Boarding current group: " + bg</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="883" y="652.5">2. obtains a list of passengers using Flight.get_passengers_in_boarding_group(bg)</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="883" y="666.5">3. Passengers are sequentially processed into boarding_queue and printed to the screen.</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="883" y="680.5">4. Method exits and returns control to the main menu caller</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="860.782,606.5 760,606.5 760,66 630.6,66 "/>
+    <polygon style="fill: #ffffff" points="860.782,614.5 876.782,606.5 860.782,598.5 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="860.782,614.5 876.782,606.5 860.782,598.5 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="850.772,98 760,98 760,66 630.6,66 "/>
+    <polygon style="fill: #ffffff" points="850.772,106 866.772,98 850.772,90 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="850.772,106 866.772,98 850.772,90 "/>
+  </g>
+</svg>

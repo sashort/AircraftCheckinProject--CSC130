@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="49cm" height="23cm" viewBox="39 19 965 444" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #ffffff" x="260" y="20" width="419.45" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="260" y="20" width="419.45" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="469.725" y="39">Passenger</text>
+    <rect style="fill: #ffffff" x="260" y="48" width="419.45" height="147"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="260" y="48" width="419.45" height="147"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="263" y="62">+last_name: string</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="263" y="78">+first_name: string</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="263" y="94">+confirmation_id: string</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="263" y="108.5">6 alphanumeric digits. SHOULD BE USED AS KEY IN DICT</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="263" y="131">+boarding_id: string</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="263" y="145.5">issued when check-in window opened, unless it's a business select ticket</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="263" y="168">+boarding_group: string</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="263" y="182.5">Preboard • A • Extra Time • B • C • To Be Determined</text>
+    <rect style="fill: #ffffff" x="260" y="195" width="419.45" height="55"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="260" y="195" width="419.45" height="55"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="263" y="209">+upgrade(): boolean</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="263" y="223.5">If successful, new boarding_id issued and True returned.</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="263" y="237.5">Successful operation can only be performed once, and can't be undone. </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="200" y="320" width="248.7" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="200" y="320" width="248.7" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="324.35" y="339">ParentPassenger</text>
+    <rect style="fill: #ffffff" x="200" y="348" width="248.7" height="78"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="200" y="348" width="248.7" height="78"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="203" y="362">+children: ChildPassenger[1..6]</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="203" y="376.5">list of children</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="203" y="399">+spouse: ParentPassenger</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="203" y="413.5">value can be null</text>
+    <rect style="fill: #ffffff" x="200" y="426" width="248.7" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="200" y="426" width="248.7" height="8"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="460" y="320" width="328.85" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="460" y="320" width="328.85" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="624.425" y="339">DisabledPassenger</text>
+    <rect style="fill: #ffffff" x="460" y="348" width="328.85" height="73"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="460" y="348" width="328.85" height="73"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="463" y="362">+has_assistive_device: boolean</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="463" y="378">+attendant: AttendantPassenger</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="463" y="392.5">value can be null</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="463" y="415">+extra_time: boolean</text>
+    <rect style="fill: #ffffff" x="460" y="421" width="328.85" height="41"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="460" y="421" width="328.85" height="41"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="463" y="435">+request_extra_time(): boolean</text>
+    <text font-size="11.2" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="463" y="449.5">if successful, extra_time is set to True and True returned</text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="800" y="320" width="202.5" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="800" y="320" width="202.5" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="901.25" y="339">AttendantPassenger</text>
+    <rect style="fill: #ffffff" x="800" y="348" width="202.5" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="800" y="348" width="202.5" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="803" y="362">+elder: DisabledPassenger</text>
+    <rect style="fill: #ffffff" x="800" y="368" width="202.5" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="800" y="368" width="202.5" height="8"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="40" y="320" width="149.6" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="40" y="320" width="149.6" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="114.8" y="339">ChildPassenger</text>
+    <rect style="fill: #ffffff" x="40" y="348" width="149.6" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="40" y="348" width="149.6" height="8"/>
+    <rect style="fill: #ffffff" x="40" y="356" width="149.6" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="40" y="356" width="149.6" height="8"/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="469.725,268.236 469.725,293 324.35,293 324.35,320 "/>
+    <polygon style="fill: #ffffff" points="477.725,268.236 469.725,252.236 461.725,268.236 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="477.725,268.236 469.725,252.236 461.725,268.236 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="469.725,268.236 469.725,293 114.8,293 114.8,320 "/>
+    <polygon style="fill: #ffffff" points="477.725,268.236 469.725,252.236 461.725,268.236 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="477.725,268.236 469.725,252.236 461.725,268.236 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="469.725,268.236 469.725,293 624.425,293 624.425,320 "/>
+    <polygon style="fill: #ffffff" points="477.725,268.236 469.725,252.236 461.725,268.236 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="477.725,268.236 469.725,252.236 461.725,268.236 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="469.725,268.236 469.725,293 901.25,293 901.25,320 "/>
+    <polygon style="fill: #ffffff" points="477.725,268.236 469.725,252.236 461.725,268.236 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="477.725,268.236 469.725,252.236 461.725,268.236 "/>
+  </g>
+</svg>
