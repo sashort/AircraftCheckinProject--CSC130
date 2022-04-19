@@ -29,6 +29,53 @@ def get_my_passenger_list():
 def get_passenger_dict():
     return __passenger_dictionary__
 
+def get_boarding_groups():
+    preboard = False
+    a = False
+    extra_time = False
+    family_boarding = False
+    b = False
+    c = False
+    for passenger in get_my_passenger_list():
+        if passenger.boarding_group() == "Preboard":
+            preboard = True
+        elif passenger.boarding_group == "A":
+            a = True
+        elif passenger.boarding_group == "Extra Time"
+            extra_time = True
+        elif passenger.boarding_group == "Family Boarding":
+            family_boarding = True
+        elif passenger.boarding_group == "B":
+            b = True
+        elif passenger.boarding_group == "C":
+            c = True
+
+    values = list()
+    if preboard:
+        values.append("Preboard")
+    if a:
+        values.append("A")
+    if extra_time:
+        values.append('Extra Time')
+    if family_boarding:
+        values.append("Family Boarding")
+    if b:
+        values.append("B")
+    if c:
+        values.append("C")
+    return values
+
+def get_passengers_in_boarding_group(boarding_group):
+    passengers = list()
+    for passenger in __passenger_list__:
+        if passenger.boarding_group() == boarding_group:
+            passengers.append(passenger)
+
+    # Generate Unsorted/Random list of passengers in boarding group
+    random_ordered_passengers = list()
+    while len(passengers) > 0:
+        random_ordered_passengers.append(passengers.pop(random.randint(0,len(passengers)-1)))
+    return random_ordered_passengers
 
 def business_select_seats_available():
     available = __MAX_BUSINESS_SELECT_SEATS__
