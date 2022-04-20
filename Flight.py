@@ -15,7 +15,6 @@ __check_in__ = list()
 __passenger_dictionary__ = dict()
 
 
-
 def check_in_begun():
     return len(__check_in__) == 1
 
@@ -200,9 +199,9 @@ def book_seats():
     original_size = len(__my_passenger_list__)
     new_passengers = list()
     passenger = None
-    outlined = Theme(outlined=True)
-    blue = Theme(background_color=(0, 0, 255))
-    print(themed(blue," SEATS AVAILABLE "), themed(outlined, ' ' + str(business_select_seats_available()) + ' '), "Business Select |", themed(outlined, ' ' + str(wanna_get_away_seats_available()) + ' '),
+    outlined = Style(outlined=True)
+    blue = Style(background_color=(0, 0, 255))
+    print(styled(blue, " SEATS AVAILABLE "), styled(outlined, ' ' + str(business_select_seats_available()) + ' '), "Business Select |", styled(outlined, ' ' + str(wanna_get_away_seats_available()) + ' '),
           "Wanna Get Away")
     print("NOTE: Business Select not available for disabled individuals or families.")
     last_name = input("╭     Last Name?  ")
@@ -222,7 +221,7 @@ def book_seats():
                 passenger.attendant = AttendantPassenger(last_name, first_name, passenger)
                 new_passengers.append(passenger.attendant)
             else:
-                print("\t" + themed("Caution","Sorry, not enough seats available for attendant."))
+                print("\t" + styled("Caution Message", "Sorry, not enough seats available for attendant."))
                 if input("\t\tWould you still like to fly alone [Y/N]? ") in "Yy":
                     new_passengers.append(passenger)
                 else:
@@ -237,7 +236,7 @@ def book_seats():
             abort_message = "Sorry, not enough seats available for " + str(child_count) + " children."
         elif input("\t\tWill a spouse be accompanying you as well [Y/N]? ") in "Yy":
             if child_count + 1 > wanna_get_away_seats_available():
-                print("\t\t" + themed("Caution", "Sorry, not enough seats for spouse."))
+                print("\t\t" + styled("Caution Message", "Sorry, not enough seats for spouse."))
                 if input("\t\tDo you wish to continue [Y/N]? ") in "Nn":
                     abort_message = "Sorry, not enough seats available for your spouse."
             else:
@@ -274,11 +273,11 @@ def book_seats():
         abort_message = "Sorry, no seats available."
         return False
     if abort_message != "":
-        print('\t' + themed("Error", "⚠ " + abort_message))
+        print('\t' + styled("Error Message", "⚠ " + abort_message))
         time.sleep(3)
     elif input("CONFIRM BOOKING [Y/N]? ") not in "Yy":
         abort_message = "Booking Aborted By User"
-        print('\t' + themed("Error", "⚠ " + abort_message))
+        print('\t' + styled("Error Message", "⚠ " + abort_message))
         time.sleep(3)
     if abort_message != "":
         __passenger_list__.remove(passenger)
