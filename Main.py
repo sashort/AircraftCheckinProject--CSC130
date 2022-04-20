@@ -63,31 +63,26 @@ main_menu = Menu("Main Menu", {1: "Book Seats",
                                7: "Reset Flight",
                                'X': "Exit"}, exit_value='X', invalid_return_value=-1)
 
-message = None
-choice = -2
 while True:
-    choice = main_menu.show(message=message, prompt=">>>Choice: ", center_message=True)
-    message = None
-    main_menu.set_style(None)
+    choice = main_menu.show(">>>Choice: ")
     if choice == 1:
         if Flight.book_seats():
-            message = "✓ Successfully Booked Seats"
-            main_menu.set_style("Confirmation")
+            main_menu.set_message("✓ Successfully Booked Seats", "Confirmation")
         else:
-            message = "✗ Booking was aborted!"
-            main_menu.set_style("Error")
+            main_menu.set_message("✗ Booking was aborted!", "Error")
     elif choice == 2:
         if Flight.open_check_in_window():
-            message = "✓  Check-in Window Opened"
-            main_menu.set_style("Information")
+            main_menu.set_message("✓  Check-in Window Opened", "Information")
         else:
-            message = "✗ Check-in Window already Open!"
-            main_menu.set_style("Caution")
+            main_menu.set_message("✗ Check-in Window already Open!", "Caution")
     elif choice == 3:
         pass
         # TODO links with gate kiosk. Here you can upgrade passengers to Business Select and Disabled people can request "Extra Time" status
     elif choice == 4:
-        display_passenger_list(Flight.get_my_passenger_list(), "MY PASSENGER LIST")
+        if len(Flight.get_my_passenger_list()) == 0:
+            main_menu.set_message("You Currently Have No Reservations", "Caution")
+        else:
+            display_passenger_list(Flight.get_my_passenger_list(), "MY PASSENGER LIST")
     elif choice == 5:
         display_passenger_list(Flight.get_passenger_list())
     elif choice == 6:
@@ -96,11 +91,9 @@ while True:
     elif choice == 7:
         # resets flight. All custom passengers will be lost.
         Flight.reset_flight()
-        message = "✓ Flight has been reset!"
-        main_menu.set_style("Information")
+        main_menu.set_message("✓ Flight has been reset!", "Information")
     elif choice == main_menu.invalid_return_value:
-        message = "✗ Invalid Input!"
-        main_menu.set_style("Error")
+        main_menu.set_message("✗ Invalid Input!", "Error")
     elif choice == main_menu.exit_value:
         break
     # time.sleep(2)

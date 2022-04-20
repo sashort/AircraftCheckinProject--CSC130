@@ -143,8 +143,17 @@ class Menu:
         self.exit_value = exit_value
         self.invalid_return_value = invalid_return_value
         self.__message_style__ = None
+        self.__message__ = None
 
-    def show(self, *, message=None, center_message=False, prompt=None, indent=0, message_style=None):
+    def set_message(self, message, style):
+        self.__message__ = message
+        if style is not None:
+            if isinstance(style, str):
+                self.__message_style__ = styles[style]
+            else:
+                self.__message_style__ = style
+
+    def show(self, prompt=None, *, center_message=True, indent=0):
         response = None
         while response is None:
             for i in range(100):
@@ -159,12 +168,12 @@ class Menu:
             max_key_length = 0
             max_menu_item_length = 0
             style = None
-            if message is not None:
-                if message_style is not None:
-                    style = message_style
+            if self.__message__ is not None:
+                if self.__message_style__ is not None:
+                    style = self.__message_style__
                 else:
                     style = self.__message_style__
-                for line in message.replace('\r', "").split('\n'):
+                for line in self.__message__.replace('\r', "").split('\n'):
                     message_lines.append(line)
                     if len(line) > menu_width:
                         menu_width = len(line)
@@ -177,7 +186,7 @@ class Menu:
                 menu_width = max_key_length + max_menu_item_length + 1
             print(indent_str + "╭" + "".rjust(menu_width + 2, "─") + "╮")
             print(indent_str + "│" + self.title.center(menu_width + 2) + "│")
-            if message is not None:
+            if self.__message__ is not None:
                 for line in message_lines:
                     result = line.center(menu_width) if center_message else line.ljust(menu_width)
                     result = ' ' + result + ' '
@@ -190,6 +199,8 @@ class Menu:
                 print(indent_str + "│ " + (str(key).rjust(max_key_length) + " " + self.menu_items[key]).ljust(
                     menu_width) + " │")
             print(indent_str + "╰" + "".rjust(menu_width + 2, "─") + "╯")
+            self.__message_style__ = None
+            self.__message__ = None
 
             if prompt is not None:
                 response = input(indent_str + prompt)
@@ -205,13 +216,9 @@ class Menu:
                             break
                     if not matched:
                         response = self.invalid_return_value
+            else:
+                break
         return response
-
-    def set_style(self, style):
-        if isinstance(style, str):
-            self.__message_style__ = styles[style]
-        else:
-            self.__message_style__ = style
 
 
 # Color definitions
