@@ -1,6 +1,7 @@
 import names
 import random
 import time
+from UI import *
 __MAX_BUSINESS_SELECT_SEATS__ = 15
 __MAX_WANNA_GET_AWAY_SEATS__ = 135
 __MAX_SEATS__ = 150
@@ -12,6 +13,7 @@ __passenger_list__ = list()
 __my_passenger_list__ = list()
 __check_in__ = list()
 __passenger_dictionary__ = dict()
+
 
 
 def check_in_begun():
@@ -198,27 +200,29 @@ def book_seats():
     original_size = len(__my_passenger_list__)
     new_passengers = list()
     passenger = None
-    print("SEATS AVAILABLE:", business_select_seats_available(), "Business Select |", wanna_get_away_seats_available(),
+    outlined = Theme(outlined=True)
+    blue = Theme(background_color=(0, 0, 255))
+    print(themed(blue," SEATS AVAILABLE "), themed(outlined, ' ' + str(business_select_seats_available()) + ' '), "Business Select |", themed(outlined, ' ' + str(wanna_get_away_seats_available()) + ' '),
           "Wanna Get Away")
     print("NOTE: Business Select not available for disabled individuals or families.")
-    last_name = input("\tWhat is your Last Name? ")
-    first_name = input("\tWhat is your First Name? ")
-    if wanna_get_away_seats_available() > 0 and input("\tAre you disabled [Y/N]? ") in "Yy":
+    last_name = input("╭     Last Name?  ")
+    first_name = input("│    First Name? ")
+    if wanna_get_away_seats_available() > 0 and input("│Disabled [Y/N]? ") in "Yy":
         passenger = DisabledPassenger(last_name, first_name,
                                       has_assistive_device=input(
-                                          "\tDo you have an Assistive Device [Y/N]? ") in "Yy")
+                                          "│\t▶       Do you have an Assistive Device [Y/N]? ") in "Yy")
         new_passengers.append(passenger)
-        if input("\tWill an Attendant be accompanying you [Y/N]? ") in "Yy":
+        if input("│\t▶ Will an Attendant be accompanying you [Y/N]? ") in "Yy":
             if wanna_get_away_seats_available() > 1:
-                print("\t\tLeave last name blank to use '" + passenger.last_name + "'")
-                last_name = input("\t\tAttendant Last Name: ")
+                print("│\t\t  Leave last name blank to use '" + passenger.last_name + "'")
+                last_name = input("│\t\t╭ Attendant Last Name: ")
                 if last_name == "":
                     last_name = passenger.last_name
-                first_name = input("\t\tAttendant First Name: ")
+                first_name = input("│\t\t╰ Attendant First Name: ")
                 passenger.attendant = AttendantPassenger(last_name, first_name, passenger)
                 new_passengers.append(passenger.attendant)
             else:
-                print("\tSorry, not enough seats available for attendant.")
+                print("\t" + themed("Caution","Sorry, not enough seats available for attendant."))
                 if input("\t\tWould you still like to fly alone [Y/N]? ") in "Yy":
                     new_passengers.append(passenger)
                 else:
@@ -233,7 +237,7 @@ def book_seats():
             abort_message = "Sorry, not enough seats available for " + str(child_count) + " children."
         elif input("\t\tWill a spouse be accompanying you as well [Y/N]? ") in "Yy":
             if child_count + 1 > wanna_get_away_seats_available():
-                print("\t\tSorry, not enough seats for spouse.")
+                print("\t\t" + themed("Caution", "Sorry, not enough seats for spouse."))
                 if input("\t\tDo you wish to continue [Y/N]? ") in "Nn":
                     abort_message = "Sorry, not enough seats available for your spouse."
             else:
@@ -270,10 +274,11 @@ def book_seats():
         abort_message = "Sorry, no seats available."
         return False
     if abort_message != "":
-        print('\t' + abort_message)
+        print('\t' + themed("Error", "⚠ " + abort_message))
         time.sleep(3)
     elif input("CONFIRM BOOKING [Y/N]? ") not in "Yy":
         abort_message = "Booking Aborted By User"
+        print('\t' + themed("Error", "⚠ " + abort_message))
         time.sleep(3)
     if abort_message != "":
         __passenger_list__.remove(passenger)
@@ -296,10 +301,10 @@ def book_seats():
             p.check_in()
 
     if check_in_begun() and not passenger.is_business_select and \
-            not passenger(isinstance(passenger, ParentPassenger)) and \
-            not passenger(isinstance(passenger, ChildPassenger)) and \
-            not passenger(isinstance(passenger, DisabledPassenger)) and \
-            not passenger(isinstance(passenger, AttendantPassenger)):
+            not isinstance(passenger, ParentPassenger) and \
+            not isinstance(passenger, ChildPassenger) and \
+            not isinstance(passenger, DisabledPassenger) and \
+            not isinstance(passenger, AttendantPassenger):
         print("Check-in has already started.")
         print("You were assigned the next available boarding group/number(s)")
         print("for your Wanna Get Away tickets. You may upgrade at the gate kiosk.")
@@ -558,7 +563,6 @@ class DisabledPassenger(Passenger):
         else:
             self.extra_time = True
             return True
-
 
 
 class AttendantPassenger(Passenger):

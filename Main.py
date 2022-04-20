@@ -1,5 +1,6 @@
 import Flight
 import time
+from UI import *
 
 
 def display_passenger_list(look_at, title="PASSENGER LIST"):
@@ -25,63 +26,53 @@ def display_passenger_list(look_at, title="PASSENGER LIST"):
     count = 1
     look_at.sort()
     for passenger in look_at:
-        print(str(count).rjust(3), passenger.confirmation_id, passenger.boarding_id.rjust(3), passenger.boarding_group().rjust(bLen), passenger.last_name.rjust(lLen), passenger.first_name.rjust(fLen))
+        print(str(count).rjust(3), passenger.confirmation_id, passenger.boarding_id.rjust(3),
+              passenger.boarding_group().rjust(bLen), passenger.last_name.rjust(lLen), passenger.first_name.rjust(fLen))
         count += 1
     print("".rjust(len(top), "-"))
-    input("PRESS ANY KEY TO RETURN TO MAIN MENU")
+    input("DOUBLE TAP TO ENTER TO MAIN MENU")
 
 
-message = ""
+main_menu = Menu("Main Menu", {0: "Exit",
+                               1: "Book Seats",
+                               2: "Open Check-In Window",
+                               3: "Gate Kiosk Window",
+                               4: "View My Reservations",
+                               5: "View All Passengers",
+                               6: "Boarding Window",
+                               7: "Reset Flight"})
+
+message = None
 while True:
-    for i in range(300):
-        print("")
-    if message != "":
-        print(message + '\n')
-        message = ""
-    print("MAIN MENU".center(26, "-"))
-    print("1 Book seats")
-    print("---------------------------")
-    if not Flight.check_in_begun():
-        print("2 Open Check-In Window")
-    print("3 Gate Kiosk Menu")
-    print("---------------------------")
-    if len(Flight.get_my_passenger_list()) > 0:
-        print("4 View My Flight Info")
-    print("5 View All Flight Info")
-    print("---------------------------")
-    print("6 Board Passengers")
-    print("---------------------------")
-    print("7 Reset Flight")
-    print("0 Exit")
-    print("Boarding FAQ can be found at https://www.southwest.com/help/day-of-travel/boarding-process")
-
-    value = input("\nCHOICE >>>  ")
-    if value == "1":
+    error_generated = False
+    if message is not None and message.find("!") > -1:
+        error_generated = True
+    choice = main_menu.show(message=message, prompt=">>>Choice: ", center_message=True, message_style="Error Message" if error_generated else "Info Message")
+    message = None
+    if choice == 1:
         if Flight.book_seats():
-            message = "Succesfully Booked Seats!"
+            message = "Successfully Booked Seats"
         else:
-            message = "Booking was aborted."
-    elif value == "2":
+            message = "Booking was aborted!"
+    elif choice == 2:
         if Flight.open_check_in_window():
             message = "Check-in Window Opened"
         else:
-            message = "Check-in Window already Open"
-    elif value == "3":
+            message = "Check-in Window already Open!"
+    elif choice == 3:
         pass
-        #TODO links with gate kiosk. Here you can upgrade passengers to Business Select and Disabled people can request "Extra Time" status
-    elif value == "4":
+        # TODO links with gate kiosk. Here you can upgrade passengers to Business Select and Disabled people can request "Extra Time" status
+    elif choice == 4:
         display_passenger_list(Flight.get_my_passenger_list(), "MY PASSENGER LIST")
-    elif value == "5":
+    elif choice == 5:
         display_passenger_list(Flight.get_passenger_list())
-    elif value == "6":
+    elif choice == 6:
         pass
         # TODO Takes passengers from Flight.get_passenger_list() and randomly inserts them into the priority queue
-    elif value == "7":
+    elif choice == 7:
         # resets flight. All custom passengers will be lost.
         Flight.reset_flight()
-        message = "Flight has been reset!"
-    elif value == "0":
+        message = "Flight has been reset"
+    elif choice == 0:
         break
     # time.sleep(2)
-
-
