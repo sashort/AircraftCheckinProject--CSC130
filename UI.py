@@ -123,6 +123,7 @@ def themed(theme, my_text):
     apply_theme(my_theme)
     my_str = __current_formatting__()
     pop_theme()
+    Theme.__bypass_call__ = False
     return my_str + my_text + __current_formatting__()
 
 
