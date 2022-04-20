@@ -70,6 +70,7 @@ while True:
         # TODO links with gate kiosk. Here you can upgrade passengers to Business Select and Disabled people can request "Extra Time" status
     elif choice == 4:
         display_passenger_list(Flight.get_my_passenger_list(), "MY PASSENGER LIST")
+        main_menu.set_theme(None)
     elif choice == 5:
         display_passenger_list(Flight.get_passenger_list())
     elif choice == 6:

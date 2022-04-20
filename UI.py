@@ -68,7 +68,7 @@ def __current_formatting__():
 def apply_theme(theme):
     my_theme = None
     if isinstance(theme, str):
-        my_theme = Theme.themes[theme]
+        my_theme = themes[theme]
     else:
         my_theme = theme
     Theme.__applied_themes__.append(my_theme)
@@ -111,7 +111,7 @@ def themed(theme, my_text):
     my_str = ""
     my_theme = None
     if isinstance(my_theme, str):
-        my_theme = Theme.themes[theme]
+        my_theme = themes[theme]
     else:
         my_theme = theme
     Theme.__bypass_call__ = True
@@ -147,9 +147,9 @@ class Menu:
         theme = None
         if message is not None:
             if error:
-                theme = Theme.themes["Error Message"]
+                theme = themes["Error Message"]
             elif information:
-                theme = Theme.themes["Info Message"]
+                theme = themes["Info Message"]
             elif message_style is not None:
                 theme = message_style
             else:
