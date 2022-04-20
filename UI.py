@@ -1,8 +1,10 @@
 import sys
+themes = dict()
 
 
 class Theme:
-    def __init__(self, *, bold=False, italic=False, underlined=False, strikethrough=False, outlined=False, inverted=False, background_color=None, foreground_color=None):
+    def __init__(self, *, bold=False, italic=False, underlined=False, strikethrough=False, outlined=False,
+                 inverted=False, background_color=None, foreground_color=None):
         self.bold = bold
         self.italic = italic
         self.underlined = underlined
@@ -13,7 +15,6 @@ class Theme:
         self.foreground_color = foreground_color
 
     __applied_themes__ = list()
-    themes = dict()
     __defined_colors__ = dict()
     __bold__ = 0
     __italic__ = 0
@@ -106,12 +107,6 @@ def pop_theme():
             print(__current_formatting__())
 
 
-def printf(theme, *objects, sep=' ', end='\n', file=sys.stdout, flush=False):
-    apply_theme(theme)
-    print(objects, sep=sep, end=end, file=file, flush=flush)
-    pop_theme()
-
-
 def themed(theme, my_text):
     my_str = ""
     my_theme = None
@@ -129,11 +124,14 @@ def themed(theme, my_text):
 
 class Menu:
 
-    def __init__(self, title, menu_items):
+    def __init__(self, title, menu_items, exit_value, *, invalid_return_value=-1):
         self.title = title
         self.menu_items = menu_items
+        self.exit_value = exit_value
+        self.invalid_return_value = invalid_return_value
+        self.__message_theme__ = None
 
-    def show(self, *, message=None, center_message=False, prompt=None, indent=0, message_style=None):
+    def show(self, *, message=None, center_message=False, prompt=None, indent=0, message_style=None, error=False, information=False):
         for i in range(100):
             print()
         indent_str = ""
@@ -146,7 +144,16 @@ class Menu:
         keys.sort()
         max_key_length = 0
         max_menu_item_length = 0
+        theme = None
         if message is not None:
+            if error:
+                theme = Theme.themes["Error Message"]
+            elif information:
+                theme = Theme.themes["Info Message"]
+            elif message_style is not None:
+                theme = message_style
+            else:
+                theme = self.__message_theme__
             for line in message.replace('\r', "").split('\n'):
                 message_lines.append(line)
                 if len(line) > menu_width:
@@ -158,21 +165,22 @@ class Menu:
                 max_menu_item_length = len(self.menu_items[key])
         if max_key_length + max_menu_item_length + 1 > menu_width:
             menu_width = max_key_length + max_menu_item_length + 1
-        print(indent_str + "╭" + "".rjust(menu_width+2, "─") + "╮")
+        print(indent_str + "╭" + "".rjust(menu_width + 2, "─") + "╮")
         if message is not None:
             for line in message_lines:
                 result = line.center(menu_width) if center_message else line.ljust(menu_width)
                 result = ' ' + result + ' '
-                if message_style is not None:
-                    print(indent_str + "│" + themed(message_style, result) + "│")
+                if theme is not None:
+                    print(indent_str + "│" + themed(theme, result) + "│")
                 else:
                     print(indent_str + "│" + result + "│")
         print(indent_str + "│" + "".ljust(menu_width + 2, "▒") + "│")
         print(indent_str + "│ " + self.title.center(menu_width) + " │")
         print(indent_str + "├" + "".ljust(menu_width + 2, "─") + "┤")
         for key in keys:
-            print(indent_str + "│ " + (str(key).rjust(max_key_length) + " " + self.menu_items[key]).ljust(menu_width) + " │")
-        print(indent_str + "╰" + "".rjust(menu_width+2, "─") + "╯")
+            print(indent_str + "│ " + (str(key).rjust(max_key_length) + " " + self.menu_items[key]).ljust(
+                menu_width) + " │")
+        print(indent_str + "╰" + "".rjust(menu_width + 2, "─") + "╯")
 
         if prompt is not None:
             response = input(indent_str + prompt)
@@ -188,12 +196,18 @@ class Menu:
                     for key in self.menu_items.keys():
                         if response == int(key):
                             return int(key)
-                    return self.show(message="Invalid Input!", center_message=center_message, prompt=prompt, indent=indent, message_style="Error Message")
+                    return self.invalid_return_value
                 except ValueError:
-                    return self.show(message="Invalid Input!", center_message=center_message, prompt=prompt, indent=indent, message_style="Error Message")
+                    return self.invalid_return_value
+
+    def set_theme(self, theme):
+        self.__message_theme__ = theme
 
 
-Theme.themes["Error Message"] = Theme(background_color=(255, 0, 0))
-Theme.themes["Info Message"] = Theme(background_color=(0, 0, 255))
-Theme.themes["Error"] = Theme(foreground_color=(255, 0, 0))
-Theme.themes["Caution"] = Theme(foreground_color=(255, 215, 0))
+themes["Error Message"] = Theme(background_color=(255, 0, 0))
+themes["Info Message"] = Theme(background_color=(0, 0, 255))
+themes["Error"] = Theme(foreground_color=(255, 0, 0))
+themes["Caution"] = Theme(foreground_color=(255, 215, 0))
+themes["Underlined"] = Theme(underlined=True)
+themes["Outlined"] = Theme(outlined=True)
+themes["Orange"] = Theme(background_color=(255, 131, 0), foreground_color=(0, 0, 0))

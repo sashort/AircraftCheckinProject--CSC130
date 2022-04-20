@@ -15,21 +15,23 @@ def display_passenger_list(look_at, title="PASSENGER LIST"):
         if len(passenger.boarding_group()) > bLen:
             bLen = len(passenger.boarding_group())
     top = "    ------ --- " + "--------------".rjust(bLen, "-") + " " + "".rjust(lLen, "-") + " " + "".rjust(fLen, "-")
-    print("".rjust(len(top), "-"))
-    print(title.center(len(top)))
-    print("Business Select Seats Available:", str(Flight.business_select_seats_available()).rjust(3) + "/ 15")
-    print(" Wanna get Away Seats Available:", str(Flight.wanna_get_away_seats_available()).rjust(3) + "/135")
-    time.sleep(.5)
+    print("".rjust(len(top), "─"))
+    print(themed(themes["Orange"], "".center(len(top))))
+    print(themed(themes["Orange"], title.center(len(top))))
+    print(themed(themes["Orange"], "".center(len(top))))
     print()
-    print("    CONF #", "BID", "Boarding Group".rjust(bLen), "Last".rjust(lLen, " "), "First".rjust(fLen))
-    print(top)
+    print("Business Select Seats Available:", themed(themes["Outlined"], ' ' + str(Flight.business_select_seats_available()).rjust(3) + ' ') + " / 15")
+    print(" Wanna get Away Seats Available:", themed(themes["Outlined"], ' ' + str(Flight.wanna_get_away_seats_available()).rjust(3) + ' ') + " /135")
+    print()
+    time.sleep(.5)
+    print("    " + themed(themes["Underlined"], "CONF #"), themed(themes["Underlined"], "BID"), themed(themes["Underlined"], "Boarding Group".rjust(bLen)), themed(themes["Underlined"], "Last".rjust(lLen, " ")), themed(themes["Underlined"], "First".rjust(fLen)))
     count = 1
     look_at.sort()
     for passenger in look_at:
         print(str(count).rjust(3), passenger.confirmation_id, passenger.boarding_id.rjust(3),
               passenger.boarding_group().rjust(bLen), passenger.last_name.rjust(lLen), passenger.first_name.rjust(fLen))
         count += 1
-    print("".rjust(len(top), "-"))
+    print("".rjust(len(top), "─"))
     input("DOUBLE TAP TO ENTER TO MAIN MENU")
 
 
@@ -40,25 +42,29 @@ main_menu = Menu("Main Menu", {0: "Exit",
                                4: "View My Reservations",
                                5: "View All Passengers",
                                6: "Boarding Window",
-                               7: "Reset Flight"})
+                               7: "Reset Flight"}, exit_value=0, invalid_return_value=-1)
 
 message = None
+choice = -2
 while True:
-    error_generated = False
-    if message is not None and message.find("!") > -1:
-        error_generated = True
-    choice = main_menu.show(message=message, prompt=">>>Choice: ", center_message=True, message_style="Error Message" if error_generated else "Info Message")
+    choice = main_menu.show(message=message, prompt=">>>Choice: ", center_message=True,
+                            error=choice == main_menu.invalid_return_value)
     message = None
+    main_menu.set_theme(None)
     if choice == 1:
         if Flight.book_seats():
             message = "Successfully Booked Seats"
+            main_menu.set_theme(themes["Info Message"])
         else:
             message = "Booking was aborted!"
+            main_menu.set_theme(themes["Error Message"])
     elif choice == 2:
         if Flight.open_check_in_window():
             message = "Check-in Window Opened"
+            main_menu.set_theme(themes["Info Message"])
         else:
             message = "Check-in Window already Open!"
+            main_menu.set_theme(themes["Error Message"])
     elif choice == 3:
         pass
         # TODO links with gate kiosk. Here you can upgrade passengers to Business Select and Disabled people can request "Extra Time" status
@@ -72,7 +78,11 @@ while True:
     elif choice == 7:
         # resets flight. All custom passengers will be lost.
         Flight.reset_flight()
-        message = "Flight has been reset"
-    elif choice == 0:
+        message = "Flight has been reset!"
+        main_menu.set_theme(themes["Info Message"])
+    elif choice == main_menu.invalid_return_value:
+        message = "Invalid Input!"
+        main_menu.set_theme(themes["Error Message"])
+    elif choice == main_menu.exit_value:
         break
     # time.sleep(2)
