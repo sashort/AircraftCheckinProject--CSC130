@@ -556,7 +556,7 @@ class DisabledPassenger(Passenger):
 
     def request_extra_time(self):
         if self.extra_time:
-            return True
+            return False
         elif self.has_assistive_device or self.attendant is not None:
             return False
         else:

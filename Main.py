@@ -1,5 +1,7 @@
 import Flight
 import time
+
+import GateKiosk
 from UI import *
 
 
@@ -41,14 +43,20 @@ def display_passenger_list(look_at, title="PASSENGER LIST"):
                          str(count).rjust(3) + ' ' + passenger.confirmation_id + ' ' + passenger.boarding_id.rjust(
                              3) + ' ' +
                          passenger.boarding_group().rjust(bLen) + ' ' + passenger.last_name.rjust(lLen) + ' ' +
-                         passenger.first_name.rjust(fLen)))
+                         passenger.first_name.rjust(fLen)), end="")
             if i < len(look_at) - 1:
                 time.sleep(1)
         else:
             print(str(count).rjust(3), passenger.confirmation_id, passenger.boarding_id.rjust(3),
                   passenger.boarding_group().rjust(bLen), passenger.last_name.rjust(lLen),
-                  passenger.first_name.rjust(fLen))
+                  passenger.first_name.rjust(fLen), end="")
             # if prev_passenger is not None:
+        if isinstance(passenger, Flight.ChildPassenger):
+            print(" 👶")
+        elif isinstance(passenger, Flight.DisabledPassenger):
+            print(" ♿")
+        else:
+            print()
         count += 1
         prev_passenger = passenger
     input(styled("Inverted", "DOUBLE TAP TO ENTER TO CONTINUE".center(len(top))))
@@ -65,7 +73,11 @@ main_menu = Menu("Main Menu", {1: "Book Seats",
 
 while True:
     choice = main_menu.show(">>>Choice: ")
-    if choice == 1:
+    if choice == main_menu.invalid_return_value:
+        main_menu.set_message("✗ Invalid Input!", "Error")
+    elif choice == main_menu.exit_value:
+        break
+    elif choice == 1:
         if Flight.book_seats():
             main_menu.set_message("✓ Successfully Booked Seats", "Confirmation")
         else:
@@ -76,8 +88,7 @@ while True:
         else:
             main_menu.set_message("✗ Check-in Window already Open!", "Caution")
     elif choice == 3:
-        pass
-        # TODO links with gate kiosk. Here you can upgrade passengers to Business Select and Disabled people can request "Extra Time" status
+        GateKiosk.show_menu()
     elif choice == 4:
         if len(Flight.get_my_passenger_list()) == 0:
             main_menu.set_message("You Currently Have No Reservations", "Caution")
@@ -92,8 +103,4 @@ while True:
         # resets flight. All custom passengers will be lost.
         Flight.reset_flight()
         main_menu.set_message("✓ Flight has been reset!", "Information")
-    elif choice == main_menu.invalid_return_value:
-        main_menu.set_message("✗ Invalid Input!", "Error")
-    elif choice == main_menu.exit_value:
-        break
     # time.sleep(2)
