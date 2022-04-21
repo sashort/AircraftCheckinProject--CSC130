@@ -1,6 +1,8 @@
 import names
 import random
 import time
+
+import Flight
 from UI import *
 __MAX_BUSINESS_SELECT_SEATS__ = 15
 __MAX_WANNA_GET_AWAY_SEATS__ = 135
@@ -13,7 +15,7 @@ __passenger_list__ = list()
 __my_passenger_list__ = list()
 __check_in__ = list()
 __passenger_dictionary__ = dict()
-
+__boarding_queue__ = list()
 
 def check_in_begun():
     return len(__check_in__) == 1
@@ -96,6 +98,15 @@ def wanna_get_away_seats_available():
             available -= 1
     return available
 
+
+def queue_and_board():
+    for bg in Flight.get_boarding_groups():
+        should_board_group = input("Press Any Key To Begin Boarding current group: {}".format(bg))
+        if should_board_group is not None:
+            return
+        passengers_in_group = Flight.get_passengers_in_boarding_group(bg)
+        for passenger in passengers_in_group:
+            __boarding_queue__.append(passenger)
 
 def reset_flight():
     __available_confirmation_ids__.clear()
