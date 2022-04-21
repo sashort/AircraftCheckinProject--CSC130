@@ -1,4 +1,5 @@
 import Flight
+import GateKiosk
 import time
 from UI import *
 
@@ -76,7 +77,7 @@ while True:
         else:
             main_menu.set_message("✗ Check-in Window already Open!", "Caution")
     elif choice == 3:
-        pass
+        GateKiosk.show_menu()
         # TODO links with gate kiosk. Here you can upgrade passengers to Business Select and Disabled people can request "Extra Time" status
     elif choice == 4:
         if len(Flight.get_my_passenger_list()) == 0:
