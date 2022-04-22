@@ -223,7 +223,7 @@ class MenuItem:
         
 
 class Menu:
-    def __init__(self, title, menu_items, exit_value, *, invalid_return_value=-1):
+    def __init__(self, title, menu_items, exit_value, *, invalid_return_value=-1, not_available_return_value=-2):
         self.title = title
         self.menu_items = menu_items
         self.exit_value = exit_value
@@ -232,6 +232,7 @@ class Menu:
         self.__message__ = None
         self.__hidden_items__ = list()
         self.__disabled_items__ = list()
+        self.not_available_return_value = not_available_return_value
 
     def menu_item(self, key):
         if key in self.menu_items.keys():
@@ -313,10 +314,12 @@ class Menu:
                     response = response.upper()
                     for key in self.menu_items.keys():
                         if response == str(key).upper():
+                            matched = True
                             if key not in self.__hidden_items__ and key not in self.__disabled_items__:
                                 response = key
-                                matched = True
-                                break
+                            else:
+                                response = self.not_available_return_value
+                            break
                     if not matched:
                         response = self.invalid_return_value
             else:

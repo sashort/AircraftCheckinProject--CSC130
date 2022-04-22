@@ -1,3 +1,4 @@
+import Flight
 from Flight import *
 import time
 
@@ -102,7 +103,7 @@ main_menu = Menu("Main Menu", {1: "Book Seats",
                                5: "View All Passengers",
                                6: "Boarding Window",
                                7: "Reset Flight",
-                               'X': "Exit"}, exit_value='X', invalid_return_value=-1)
+                               'X': "Exit"}, exit_value='X')
 while True:
     main_menu.menu_item(2).set_disabled(check_in_begun())
     main_menu.menu_item(4).set_disabled(len(get_my_passenger_list()) == 0)
@@ -112,6 +113,8 @@ while True:
     choice = main_menu.show(">>>Choice: ")
     if choice == main_menu.invalid_return_value:
         main_menu.set_message("✗ Invalid Input!", "Error")
+    elif choice == main_menu.not_available_return_value:
+        main_menu.set_message("✗ Menu Option Not Available!", "Caution")
     elif choice == main_menu.exit_value:
         break
     elif choice == 1:
@@ -120,17 +123,12 @@ while True:
         else:
             main_menu.set_message("✗ Booking was aborted!", "Error")
     elif choice == 2:
-        if open_check_in_window():
-            main_menu.set_message("✓  Check-in Window Opened", "Information")
-        else:
-            main_menu.set_message("✗ Check-in Window already Open!", "Caution")
+        Flight.open_check_in_window()
+        main_menu.set_message("✓  Check-in Window Opened", "Information")
     elif choice == 3:
         GateKiosk.show_menu()
     elif choice == 4:
-        if len(get_my_passenger_list()) == 0:
-            main_menu.set_message("You Currently Have No Reservations", "Caution")
-        else:
-            display_passenger_list(get_my_passenger_list(), "MY PASSENGER LIST")
+        display_passenger_list(get_my_passenger_list(), "MY PASSENGER LIST")
     elif choice == 5:
         display_passenger_list(get_passenger_list())
     elif choice == 6:
