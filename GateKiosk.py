@@ -48,6 +48,10 @@ def grant_extra_time():
         if isinstance(my_passenger, DisabledPassenger):
             if my_passenger.extra_time:
                 kiosk_menu.set_message("Passenger Already Granted Extra Time", styles["Caution"])
+            elif my_passenger.boarding_group() == "To Be Determined":
+                kiosk_menu.set_message("Request Extra Time\nAfter Check-In Window Opens", styles["Caution"])
+            elif my_passenger.boarding_group() == "A":
+                kiosk_menu.set_message("Extra Time Not Necessary\nA Boards Before Extra Time", styles["Caution"])
             elif my_passenger.request_extra_time():
                 kiosk_menu.set_message("Extra Time Granted For Passenger", styles["Confirmation"])
             else:
