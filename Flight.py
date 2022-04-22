@@ -559,6 +559,8 @@ class DisabledPassenger(Passenger):
             return False
         elif self.has_assistive_device or self.attendant is not None:
             return False
+        elif self.boarding_group() == "A" or self.boarding_group() == "To Be Determined":
+            return False
         else:
             self.extra_time = True
             return True
