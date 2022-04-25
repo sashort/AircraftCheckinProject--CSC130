@@ -21,7 +21,15 @@ def show_menu():
         boarding_menu.menu_item(3).set_disabled(len(queue) == 0)
         boarding_menu.menu_item(4).set_disabled(len(queue) == 0)
         boarding_menu.menu_item('X').set_disabled(len(group_ids) > 0 or len(queue) > 0)
-        choice = boarding_menu.show(">>>Choice: ", indent=1, show_available_seats=True, sticky_message=True)
+        if not boarding_menu.menu_item(1).disabled():
+            default_value = 1
+        elif not boarding_menu.menu_item(2).disabled():
+            default_value = 2
+        elif not boarding_menu.menu_item('X').disabled():
+            default_value = 'X'
+        else:
+            default_value = None
+        choice = boarding_menu.show(">>>Choice: ", indent=1, show_available_seats=True, sticky_message=True, default_value=default_value)
         if choice == 1:
             passengers = get_passengers_in_boarding_group(group_ids[0])
             for p in passengers:

@@ -254,8 +254,8 @@ class Passenger:
         __passenger_list__.append(self)
         __passenger_dictionary__[self.confirmation_id] = self
         __field_widths__["Last Name"] = max(__field_widths__["Last Name"], len(self.last_name))
-        __field_widths__["First Name"] = max(__field_widths__["First Name"], len(self.last_name))
-        if check_in_begun():
+        __field_widths__["First Name"] = max(__field_widths__["First Name"], len(self.first_name))
+        if check_in_begun() or self.is_business_select:
             self.check_in()
 
     def check_in(self, next_available=True):
