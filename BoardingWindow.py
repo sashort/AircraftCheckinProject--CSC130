@@ -4,7 +4,8 @@ from UI import *
 
 boarding_menu = Menu("Boarding Window", {1: "Queue Current Boarding Group",
                                          2: "Board Current Boarding Group",
-                                         3: "Show Queue",
+                                         3: "Show Queue By Order Of Entry",
+                                         4: "Show Prioritized Queue",
                                          'X': "Return to Main Menu"}, exit_value='X')
 
 
@@ -18,6 +19,7 @@ def show_menu():
         boarding_menu.menu_item(1).set_disabled(len(group_ids) == 0 or len(queue) > 0)
         boarding_menu.menu_item(2).set_disabled(len(queue) == 0)
         boarding_menu.menu_item(3).set_disabled(len(queue) == 0)
+        boarding_menu.menu_item(4).set_disabled(len(queue) == 0)
         boarding_menu.menu_item('X').set_disabled(len(group_ids) > 0 or len(queue) > 0)
         choice = boarding_menu.show(">>>Choice: ", indent=1, show_available_seats=True, sticky_message=True)
         if choice == 1:
@@ -34,6 +36,8 @@ def show_menu():
             passengers.clear()
         elif choice == 3:
             display_passenger_list(passengers, "ORDER OF QUEUE ENTRY", False)
+        elif choice == 4:
+            display_passenger_list(queue.__queue__, "PRIORITIZED QUEUE", False, index_list=passengers)
         elif choice == 'X':
             get_my_passenger_list().clear()
             get_passenger_list().clear()
