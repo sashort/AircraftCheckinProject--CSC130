@@ -4,12 +4,12 @@ from UI import *
 passenger_dict = get_passenger_dict()
 kiosk_menu = Menu("Gate Kiosk Menu", {1: "Upgrade to Business Select",
                                       2: "Request Extra Boarding Time",
-                                      'X': "Return to Main Menu"}, exit_value='X', invalid_return_value=-1)
+                                      'X': "Return to Main Menu"}, exit_value='X')
 
 
 def show_menu():
     while True:
-        choice = kiosk_menu.show(">>>Choice: ")
+        choice = kiosk_menu.show(">>>Choice: ", show_available_seats=True)
         if choice == 1:
             upgrade_passenger()
         elif choice == 2:
