@@ -1,9 +1,19 @@
 import time
-
 import Flight
+import sys
 
 styles = dict()
 colors = dict()
+
+
+try:
+    '┌┬┐╔╦╗╒╤╕╓╥╖│║─═├┼┤╠╬╣╞╪╡╟╫╢└┴┘╚╩╝╘╧╛╙╨╜'.encode(sys.stdout.encoding)
+    test = True
+except UnicodeEncodeError:
+    test = False
+
+if not test:
+    print('Unsupported characters in',sys.stdout.encoding)
 
 
 class Style:

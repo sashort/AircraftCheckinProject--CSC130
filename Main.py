@@ -3,7 +3,9 @@ from Flight import *
 import BookingWindow
 import GateKiosk
 import BookingWindow
+import os
 
+os.system("")
 
 main_menu = Menu("Main Menu", {1: "Book Seats",
                                2: "Open Check-In Window",

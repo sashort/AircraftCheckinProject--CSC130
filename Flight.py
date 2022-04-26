@@ -1,7 +1,7 @@
-import names
 import random
 import time
 from UI import *
+import Namelist
 
 __MAX_BUSINESS_SELECT_SEATS__ = 15
 __MAX_WANNA_GET_AWAY_SEATS__ = 135
@@ -55,7 +55,6 @@ def get_passenger_dict():
 
 
 def get_boarding_groups():
-    print(">>>>>>>>>>>>>>>>>>>>>>.Getting")
     bg = dict()
     bg["Preboard"] = False
     bg["A"] = False
@@ -112,7 +111,7 @@ def wanna_get_away_seats_available():
 def show_available_seats():
     print("Business Select Seats Available:",
           styled(styles["Outlined"], ' ' + str(business_select_seats_available()).rjust(3) + ' ') + " / 15")
-    print(" Wanna get Away Seats Available:",
+    print(" Wanna Get Away Seats Available:",
           styled(styles["Outlined"], ' ' + str(wanna_get_away_seats_available()).rjust(3) + ' ') + " /135")
 
 
@@ -237,11 +236,11 @@ class Passenger:
     def __init__(self, last_name=None, first_name=None, *, is_business_select=False):
         self.boarding_id = ""
         if first_name is None:
-            self.first_name = names.get_first_name(('male' if random.randint(0, 1) == 0 else 'female'))
+            self.first_name = Namelist.get_first_name(('male' if random.randint(0, 1) == 0 else 'female'))
         else:
             self.first_name = first_name
         if last_name is None:
-            self.last_name = names.get_last_name()
+            self.last_name = Namelist.get_last_name()
         else:
             self.last_name = last_name
         self.confirmation_id = ""
