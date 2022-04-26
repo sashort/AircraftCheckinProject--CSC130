@@ -26,22 +26,6 @@ last_name_menu = Menu("", {'X': "Abort"}, exit_value='X')
 def show_menu():
     def show_business_select_menu():
         while True:
-            last_name_menu.set_message("Your Information: Last Name")
-            last = last_name_menu.show("Last Name: ", indent=2, sticky_message=True)
-            if last == "X":
-                booking_menu.set_message("Business Select Booking Aborted", "Error")
-                return
-            first_name_menu.set_message("Your Information: First Name")
-            first = first_name_menu.show("First Name: ", indent=2, sticky_message=True)
-            if first == "X":
-                booking_menu.set_message("Business Select Booking Aborted", "Error")
-                return
-            get_my_passenger_list().append(Passenger(last, first, is_business_select=True))
-
-
-def show_menu():
-    def show_business_select_menu():
-        while True:
             last_name_menu.set_message("Your Information: Last Name", "Information")
             last = last_name_menu.show("Last Name: ", indent=2, sticky_message=True, show_available_seats=True)
             if last == "X":
@@ -56,7 +40,7 @@ def show_menu():
             booking_menu.set_message("Business Select Seat Booked", "Confirmation")
             break
 
-    def show_gga_menu():
+    def show_wga_menu():
         while True:
             last_name_menu.set_message("Your Information: Last Name", "Information")
             last = last_name_menu.show("Last Name: ", indent=2, sticky_message=True, show_available_seats=True)
@@ -66,10 +50,10 @@ def show_menu():
             first_name_menu.set_message("Your Information: First Name", "Information")
             first = first_name_menu.show("First Name: ", indent=2, sticky_message=True, show_available_seats=True)
             if first == "X":
-                booking_menu.set_message("Business Select Booking Aborted", "Error")
+                booking_menu.set_message("Wanna Get Away Booking Aborted", "Error")
                 return
             get_my_passenger_list().append(Passenger(last, first))
-            booking_menu.set_message("Gotta Get Away\nSeat Booked", "Confirmation")
+            booking_menu.set_message("Wanna Get Away\nSeat Booked", "Confirmation")
             break
 
     def show_disabled_menu():
@@ -230,7 +214,7 @@ def show_menu():
         elif choice == 3:
             show_family_menu()
         elif choice == 4:
-            show_gga_menu()
+            show_wga_menu()
         elif choice == booking_menu.invalid_return_value:
             booking_menu.set_message("Invalid Selection", "Error")
         elif choice == booking_menu.exit_value:
