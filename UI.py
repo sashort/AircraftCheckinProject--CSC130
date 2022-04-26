@@ -318,6 +318,7 @@ class Menu:
                 self.__message__ = None
 
             if prompt is not None:
+                matched = False
                 response = input(indent_str + prompt)
                 if response == '':
                     if default_value is not None:
@@ -332,6 +333,7 @@ class Menu:
                 elif response in self.menu_items.keys():
                     pass
                 elif response.upper() in self.menu_items.keys():
+                    matched = True
                     response = response.upper()
                 elif len(self.menu_items) == 1 and self.exit_value in self.menu_items.keys():
                     try:
@@ -339,20 +341,18 @@ class Menu:
                     except ValueError:
                         pass
                 elif response not in self.menu_items.keys():
-                    matched = False
                     response = response.upper()
                     for key in self.menu_items.keys():
                         if response == str(key).upper():
                             matched = True
-                            if key not in self.__hidden_items__ and key not in self.__disabled_items__:
-                                response = key
-                            else:
-                                response = self.not_available_return_value
+                            response = key
                             break
                     if not matched:
                         response = self.invalid_return_value
                 else:
                     break
+                if matched and (response in self.__disabled_items__ or response in self.__hidden_items__):
+                    response = self.not_available_return_value
         if sticky_message:
             self.__message_style__ = None
             self.__message__ = None

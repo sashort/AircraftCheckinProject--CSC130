@@ -6,7 +6,7 @@ boarding_menu = Menu("Boarding Window", {1: "Queue Current Boarding Group",
                                          2: "Board Current Boarding Group",
                                          3: "Show Queue By Order Of Entry",
                                          4: "Show Prioritized Queue",
-                                         'X': "Return to Main Menu"}, exit_value='X')
+                                         'X': "Return to Main Menu"}, exit_value='X', not_available_return_value=-1)
 
 
 def show_menu():
