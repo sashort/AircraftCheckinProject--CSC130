@@ -54,7 +54,7 @@ for i in range(100):
 print(styled("Bold", styled("Confirmation", "".center(100))))
 print(styled("Bold", styled("Confirmation", "THANK YOU FOR CHOOSING NOT-CARDINAL DIRECTION AIRLINES".center(100))))
 print(styled("Confirmation", "".center(100)))
-print(styled("Passenger List Banner", "\tJamison Sasser - GateKiosk.py".ljust(97)))
+print(styled("Passenger List Banner", "\tJamison Sasser - GateKiosk.py, Namelist.py".ljust(97)))
 print(styled("Passenger List Banner", "\tPeter Scott    - BoardingWindow.py".ljust(97)))
 print(styled("Passenger List Banner", "\tS. Andy Short  - UI.py, BookingWindow.py".ljust(97)))
 print(styled("Passenger List Banner", "\tStefan Slaczka - PassengerPriorityQueue.py".ljust(97)))
