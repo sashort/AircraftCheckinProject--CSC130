@@ -26,12 +26,12 @@ last_name_menu = Menu("", {'X': "Abort"}, exit_value='X')
 def show_menu():
     def show_business_select_menu():
         while True:
-            last_name_menu.set_message("Your Information: Last Name", "Information")
+            last_name_menu.set_message("Your Information", "Information")
             last = last_name_menu.show("Last Name: ", indent=2, sticky_message=True, show_available_seats=True)
             if last == "X":
                 booking_menu.set_message("Business Select Booking Aborted", "Error")
                 return
-            first_name_menu.set_message("Your Information: First Name", "Information")
+            first_name_menu.set_message("Your Information", "Information")
             first = first_name_menu.show("First Name: ", indent=2, sticky_message=True, show_available_seats=True)
             if first == "X":
                 booking_menu.set_message("Business Select Booking Aborted", "Error")
@@ -42,12 +42,12 @@ def show_menu():
 
     def show_wga_menu():
         while True:
-            last_name_menu.set_message("Your Information: Last Name", "Information")
+            last_name_menu.set_message("Your Information", "Information")
             last = last_name_menu.show("Last Name: ", indent=2, sticky_message=True, show_available_seats=True)
             if last == "X":
                 booking_menu.set_message("Business Select Booking Aborted", "Error")
                 return
-            first_name_menu.set_message("Your Information: First Name", "Information")
+            first_name_menu.set_message("Your Information", "Information")
             first = first_name_menu.show("First Name: ", indent=2, sticky_message=True, show_available_seats=True)
             if first == "X":
                 booking_menu.set_message("Wanna Get Away Booking Aborted", "Error")
@@ -57,6 +57,29 @@ def show_menu():
             break
 
     def show_disabled_menu():
+        last_name_menu.set_message("Your Information", "Information")
+        last = last_name_menu.show(" Last Name: ", indent=2, show_available_seats=True)
+        if last == "X":
+            booking_menu.set_message("Disabled Booking Aborted", "Error")
+            return
+        first_name_menu.set_message("Your Information", "Information")
+        first = first_name_menu.show(" Last Name: " + last + "\nFirst Name: ", indent=2, show_available_seats=True)
+        if first == "X":
+            booking_menu.set_message("Disabled Booking Aborted", "Error")
+            return
+        while True:
+            assistive_device_menu.set_message("Your Information", "Information")
+            prompt = "            Name: " + last + ", " + first + '\n' + \
+                     "Assistive Device? "
+            assistive_device = assistive_device_menu.show(prompt, show_available_seats=True, indent=2, sticky_message=True)
+            if assistive_device != assistive_device_menu.invalid_return_value:
+                break
+            else:
+                print(styled("Error Message", "Invalid Input!"))
+                time.sleep(2)
+        if assistive_device == "X":
+            booking_menu.set_message("Disabled Booking Aborted", "Error")
+            return
         while True:
             attendant = attendant_menu.show(">>>Response: ", show_available_seats=True, indent=2)
             if attendant != attendant_menu.invalid_return_value:
@@ -68,52 +91,33 @@ def show_menu():
                 else:
                     break
             else:
-                attendant_menu.set_message("Invalid Response", "Error")
+                print(styled("Error Message", "Invalid Input!"))
+                time.sleep(2)
         if attendant == "X":
             booking_menu.set_message("Disabled Booking Aborted", "Error")
             return
-        while True:
-            assistive_device = assistive_device_menu.show(">>>Response: ", show_available_seats=True, indent=2)
-            if assistive_device != assistive_device_menu.invalid_return_value:
-                break
-            else:
-                assistive_device_menu.set_message("Invalid Response", "Error")
-        if assistive_device == "X":
-            booking_menu.set_message("Disabled Booking Aborted", "Error")
-            return
-        last_name_menu.set_message("Your Information: Last Name", "Information")
-        last = last_name_menu.show("Last Name: ", indent=2, show_available_seats=True)
-        if last == "X":
-            booking_menu.set_message("Disabled Booking Aborted", "Error")
-            return
-        first_name_menu.set_message("Your Information: First Name", "Information")
-        first = first_name_menu.show("First Name: ", indent=2, show_available_seats=True)
-        if first == "X":
-            booking_menu.set_message("Disabled Booking Aborted", "Error")
-            return
-        if attendant == "Y":
+        elif attendant == "Y":
             last_name_menu.set_message("Attendant Information: Last Name\nLeave Blank To Use '" + last + "'",
                                        "Information")
-            a_last = last_name_menu.show("Attendant Last Name: ", indent=2, show_available_seats=True,
+            a_last = last_name_menu.show(" Last Name: ", indent=2, show_available_seats=True,
                                          default_value=last)
             if a_last == "X":
                 booking_menu.set_message("Disabled Booking Aborted", "Error")
                 return
-            first_name_menu.set_message("Attendant Information: First Name", "Information")
-            a_first = first_name_menu.show("First Name: ", indent=2, show_available_seats=True)
+            first_name_menu.set_message("Attendant Information", "Information")
+            a_first = first_name_menu.show(" Last Name: " + a_last + "\nFirst Name: ", indent=2, show_available_seats=True)
             if a_first == "X":
                 booking_menu.set_message("Disabled Booking Aborted", "Error")
                 return
-            a = AttendantPassenger(a_last, a_first)
-            d = DisabledPassenger(last, first, assistive_device == "Y", a)
+
+        d = DisabledPassenger(last, first, assistive_device == "Y")
+        get_my_passenger_list().append(d)
+        if attendant == 'Y':
+            a = AttendantPassenger(a_last, a_first, d)
             a.elder = d
             d.attendant = a
-            get_my_passenger_list().append(d)
             get_my_passenger_list().append(a)
-            booking_menu.set_message("Disabled Passenger and\nAttendant Booked", "Confirmation")
-        elif attendant == "N":
-            get_my_passenger_list().append(DisabledPassenger(last, first, assistive_device == "Y"))
-            booking_menu.set_message("Disabled Passenger Booked", "Confirmation")
+        booking_menu.set_message("Disabled Passenger and\nAttendant Booked", "Confirmation")
 
     def show_family_menu():
         while True:
@@ -159,24 +163,25 @@ def show_menu():
             for i in range(total):
                 message_suffix = ""
                 if i == 0:
-                    message = "Your Information: "
+                    message = "Your Information"
                 elif i == 1 and spouse == "Y":
-                    message = "Spouse's Information: "
-                    message_suffix = "\nLeave Blank to use '" + name_list[0] + "'"
+                    message = "Spouse's Information"
+                    message_suffix = ": Last Name\nLeave Blank to use '" + name_list[0] + "'"
                 elif spouse == 'Y':
-                    message = "Child " + str(i - 1) + " Information: "
-                    message_suffix = "\nLeave Blank to use '" + name_list[0] + "'"
+                    message = "Child" + ((' ' + str(i - 1)) if int(child_count) > 1 else '') + " Information"
+                    message_suffix = ": Last Name\nLeave Blank to use '" + name_list[0] + "'"
                 else:
-                    message = "Child " + str(i) + " Information: "
-                    message_suffix = "\nLeave Blank to use '" + name_list[0] + "'"
-                last_name_menu.set_message(message + "Last Name" + message_suffix, "Information")
-                first_name_menu.set_message(message + "First Name", "Information")
-                last = last_name_menu.show("Last Name: ", indent=2, show_available_seats=True,
+                    message = "Child" + ((' ' + str(i)) if int(child_count) > 1 else '') + " Information"
+                    message_suffix = ": Last Name\nLeave Blank to use '" + name_list[0] + "'"
+                last_name_menu.set_message(message + message_suffix, "Information")
+                first_name_menu.set_message(message, "Information")
+                last = last_name_menu.show(" Last Name: ", indent=2, show_available_seats=True,
                                            default_value=None if message_suffix == "" else name_list[0])
+                prompt = " Last Name: " + last + '\n' + "First Name: "
                 if last == "X":
                     booking_menu.set_message("Family Booking Aborted", "Error")
                     return
-                first = first_name_menu.show("First Name: ", indent=2, show_available_seats=True, sticky_message=True)
+                first = first_name_menu.show(prompt, indent=2, show_available_seats=True, sticky_message=True)
                 if first == "X":
                     booking_menu.set_message("Family Booking Aborted", "Error")
                     return

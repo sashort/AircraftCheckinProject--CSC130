@@ -1,19 +1,13 @@
 import time
-import Flight
-import sys
+import os
 
+import Flight
+
+os.system("")
 styles = dict()
 colors = dict()
 
-
-try:
-    '┌┬┐╔╦╗╒╤╕╓╥╖│║─═├┼┤╠╬╣╞╪╡╟╫╢└┴┘╚╩╝╘╧╛╙╨╜'.encode(sys.stdout.encoding)
-    test = True
-except UnicodeEncodeError:
-    test = False
-
-if not test:
-    print('Unsupported characters in',sys.stdout.encoding)
+__default_menu_width__ = 30
 
 
 class Style:
@@ -273,6 +267,7 @@ class Menu:
                 print()
             if show_available_seats:
                 Flight.show_available_seats()
+                print()
             title_lines = self.title.replace('\r', '').split('\n')
             menu_width = 0
             for ln in title_lines:
@@ -280,7 +275,6 @@ class Menu:
             message_lines = list()
             keys = list(self.menu_items.keys())
             max_key_length = 0
-            max_menu_item_length = 0
             style = None
             if self.__message__ is not None:
                 if self.__message_style__ is not None:
@@ -291,45 +285,55 @@ class Menu:
                     message_lines.append(line)
                     if len(line) > menu_width:
                         menu_width = len(line)
+            max_key_length = 0
+            max_menu_item_length = 0
+            default_found = False
             for key in keys:
                 if key not in self.__hidden_items__:
-                    if len(str(key)) > max_key_length:
-                        max_key_length = len(str(key))
-                    if len(self.menu_items[key]) > max_menu_item_length:
-                        max_menu_item_length = len(self.menu_items[key])
-            if max_key_length + max_menu_item_length + 1 > menu_width:
-                menu_width = max_key_length + max_menu_item_length + 1
-            print(indent_str + "╭" + "".rjust(menu_width + 2, "─") + "╮")
+                    key_str = str(key)
+                    if key_str == str(default_value):
+                        key_str = '<' + key_str + '>'
+                        default_found = True
+                    max_key_length = max(max_key_length, len(key_str))
+                    max_menu_item_length = max(max_menu_item_length, len(self.menu_items[key]))
+            menu_width = max(max(menu_width, max_key_length + max_menu_item_length + 1) + 2, __default_menu_width__)
             if self.__message__ is not None:
+                print(indent_str + styled("Menu Title" if style is None else style, ''.ljust(menu_width)))
                 for line in message_lines:
-                    result = line.center(menu_width) if center_message else line.ljust(menu_width)
-                    result = ' ' + result + ' '
-                    if style is not None:
-                        print(indent_str + "│" + styled("Bold", styled(style, result)) + "│")
-                    else:
-                        print(indent_str + "│" + styled("Bold", result) + "│")
+                    result = line.center(menu_width) if center_message else (' ' + line).ljust(menu_width)
+                    print(indent_str + styled("Menu Title" if style is None else style, result))
+                print(indent_str + styled("Menu Title" if style is None else style, ''.ljust(menu_width)))
             if self.title is not None and self.title != "":
+                if self.__message__ is None:
+                    print(indent_str + styled("Menu Title", ''.center(menu_width)))
                 for ttl_ln in title_lines:
-                    print(indent_str + "│" + styled("Bold", ttl_ln.center(menu_width + 2)) + "│")
-            if len(self.menu_items) > 0:
-                print(indent_str + "├" + "".ljust(menu_width + 2, "─") + "┤")
+                    print(indent_str + styled("Menu Title", ttl_ln.center(menu_width)))
+                if self.__message__ is None:
+                    print(indent_str + styled("Menu Title", ''.center(menu_width)))
             for key in keys:
                 if key not in self.__hidden_items__:
-                    if key in self.__disabled_items__:
-                        print(indent_str + "│ " + styled("Disabled", (
-                                str(key).rjust(max_key_length) + " " + self.menu_items[key]).ljust(
-                            menu_width)) + " │")
+                    key_str = str(key).rjust(max_key_length - 2)
+                    if str(key) == str(default_value):
+                        key_str = "<" + key_str.rjust(max_key_length - 2) + ">"
+                    elif default_found:
+                        key_str = (key_str + ' ').rjust(max_key_length)
                     else:
-                        print(indent_str + "│ " + (str(key).rjust(max_key_length) + " " + self.menu_items[key]).ljust(
-                            menu_width) + " │")
-            print(indent_str + "╰" + "".rjust(menu_width + 2, "─") + "╯")
+                        key_str = key_str.rjust(max_key_length)
+                    if key in self.__disabled_items__:
+                        print(indent_str + styled("Disabled Menu Item", (key_str + " " + self.menu_items[key].ljust(max_menu_item_length)).center(menu_width)))
+                    else:
+                        print(indent_str + styled("Menu Item", (key_str + " " + self.menu_items[key].ljust(max_menu_item_length)).center(menu_width)))
             if not sticky_message:
                 self.__message_style__ = None
                 self.__message__ = None
 
             if prompt is not None:
                 matched = False
-                response = input(indent_str + prompt)
+                prompt_lines = prompt.replace('\r', '').split('\n')
+                prompt = indent_str + prompt_lines[0]
+                for i in range(len(prompt_lines) - 1):
+                    prompt += '\n' + indent_str + prompt_lines[i + 1]
+                response = input(prompt)
                 if response == '':
                     if default_value is not None:
                         response = default_value
@@ -382,6 +386,7 @@ colors["White"] = (255, 255, 255)
 colors["Dark Grey"] = (68, 68, 68)
 colors["Darker Grey"] = (40, 40, 40)
 colors["Black"] = (0, 0, 0)
+colors["Almost White"] = (180, 180, 180)
 
 # Generic Styles
 styles["Underlined"] = Style(underlined=True)
@@ -390,19 +395,25 @@ styles["Inverted"] = Style(inverted=True)
 styles["Bold"] = Style(bold=True)
 
 # Menu Message Header Styles
-styles["Information"] = Style(background_gradient_color_left=(11, 11, 69), background_gradient_color_right=(0, 0, 0))
+styles["Information"] = Style(background_gradient_color_left=(11, 11, 69), background_gradient_color_right="Black", bold=True)
 styles["Confirmation"] = Style(background_color="Green")
-styles["Caution"] = Style(background_gradient_color_left="Neon Orange", background_gradient_color_right="Burnt Orange")
-styles["Error"] = Style(background_gradient_color_left="Neon Red", background_gradient_color_right="Candy Apple Red")
+styles["Caution"] = Style(background_gradient_color_left="Neon Orange", background_gradient_color_right="Burnt Orange", foreground_color="Black", bold=True)
+styles["Error"] = Style(background_gradient_color_left="Neon Red", background_gradient_color_right="Candy Apple Red", bold=True)
 
 # UI Specific Styles
-styles["Passenger List Banner"] = Style(background_gradient_color_left="Black",
-                                        background_gradient_color_right="Darker Grey", foreground_color="White",
-                                        bold=True)
+styles["Passenger List Banner"] = styles["Information"]
 styles["Column Header"] = Style(bold=True, underlined=True)
 styles["Error Message"] = Style(foreground_color="Red")
 styles["Caution Message"] = Style(foreground_color="Orange")
-styles["Disabled"] = Style(foreground_gradient_color_left="Dark Grey", foreground_gradient_color_right="Darker Grey")
+styles["Menu Item"] = Style(background_gradient_color_left=(40, 40, 40),
+                            background_gradient_color_right=(175, 175, 175), foreground_color="White")
+styles["Disabled Menu Item"] = Style(background_gradient_color_left=(40, 40, 40),
+                                     background_gradient_color_right=(175, 175, 175),
+                                     foreground_gradient_color_left="Dark Grey",
+                                     foreground_gradient_color_right="Darker Grey")
+styles["Menu Title"] = Style(background_gradient_color_left="Almost White",
+                             background_gradient_color_right="White", foreground_color="Black",
+                             bold=True)
 
 
 def passenger_string(passenger=None, *, index=0, underlined=False):
@@ -439,7 +450,8 @@ def display_passenger_list(look_at, title="PASSENGER LIST", sort=True, delay_bet
         if isinstance(lst[index1], Flight.DisabledPassenger) and isinstance(lst[index2], Flight.AttendantPassenger) and \
                 lst[index1].attendant is lst[index2]:
             return True
-        elif isinstance(lst[index1], Flight.AttendantPassenger) and isinstance(lst[index2], Flight.DisabledPassenger) and \
+        elif isinstance(lst[index1], Flight.AttendantPassenger) and isinstance(lst[index2],
+                                                                               Flight.DisabledPassenger) and \
                 lst[index2].attendant is lst[index1]:
             return True
         elif isinstance(lst[index1], Flight.ParentPassenger) and isinstance(lst[index2], Flight.ParentPassenger) and \
