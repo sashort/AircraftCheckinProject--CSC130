@@ -16,7 +16,7 @@ def show_menu():
     disable_default_value = list()
     while True:
         if len(group_ids) > 0:
-            boarding_menu.set_message("Current Boarding Group:\n" + group_ids[0], "Information")
+            boarding_menu.set_message(("[Queued]" if len(queue) > 0 else 'Next') + " Boarding Group:\n" + group_ids[0], "Information")
         boarding_menu.menu_item(1).set_disabled(len(group_ids) == 0 or len(queue) > 0)
         boarding_menu.menu_item(2).set_disabled(len(queue) == 0)
         boarding_menu.menu_item(3).set_disabled(len(queue) == 0)
@@ -41,7 +41,11 @@ def show_menu():
             for p in passengers:
                 queue.enqueue(p)
         elif choice == 2:
-            display_passenger_list(queue.__queue__, "NOW BOARDING " + group_ids[0].upper(), delay_between_entries=.25, sort=False, index_list=passengers)
+            if group_ids[0] == "Family Boarding" or group_ids[0] == "Preboard":
+                banner_string = group_ids[0] + " In Progress"
+            else:
+                banner_string = "Now Boarding: " + group_ids[0]
+            display_passenger_list(queue.__queue__, banner_string, delay_between_entries=.25, sort=False, index_list=passengers)
             queue.clear()
             group_ids.pop(0)
             if len(group_ids) == 0:

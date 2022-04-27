@@ -256,7 +256,7 @@ class Menu:
         return MenuItem(self, key)
 
     def show(self, prompt=None, *, center_message=True, indent=0, show_available_seats=False, default_value=None,
-             sticky_message=False):
+             sticky_message=False, show_title_first=False):
         response = None
         indent_str = ""
         if indent > 0:
@@ -297,13 +297,20 @@ class Menu:
                     max_key_length = max(max_key_length, len(key_str))
                     max_menu_item_length = max(max_menu_item_length, len(self.menu_items[key]))
             menu_width = max(max(menu_width, max_key_length + max_menu_item_length + 1) + 2, __default_menu_width__)
+            if self.title is not None and self.title != "" and show_title_first:
+                if self.__message__ is None:
+                    print(indent_str + styled("Menu Title", ''.center(menu_width)))
+                for ttl_ln in title_lines:
+                    print(indent_str + styled("Menu Title", ttl_ln.center(menu_width)))
+                if self.__message__ is None:
+                    print(indent_str + styled("Menu Title", ''.center(menu_width)))
             if self.__message__ is not None:
                 print(indent_str + styled("Menu Title" if style is None else style, ''.ljust(menu_width)))
                 for line in message_lines:
                     result = line.center(menu_width) if center_message else (' ' + line).ljust(menu_width)
                     print(indent_str + styled("Menu Title" if style is None else style, result))
                 print(indent_str + styled("Menu Title" if style is None else style, ''.ljust(menu_width)))
-            if self.title is not None and self.title != "":
+            if self.title is not None and self.title != "" and not show_title_first:
                 if self.__message__ is None:
                     print(indent_str + styled("Menu Title", ''.center(menu_width)))
                 for ttl_ln in title_lines:
