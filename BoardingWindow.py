@@ -33,7 +33,7 @@ def show_menu():
             default_value = 'X'
         else:
             default_value = None
-        choice = boarding_menu.show(">>>Choice: ", indent=1, show_available_seats=True, sticky_message=True, default_value=default_value)
+        choice = boarding_menu.show(">>>Choice: ", indent=1, show_available_seats=False, sticky_message=True, default_value=default_value)
         if len(disable_default_value) > 0:
             disable_default_value.pop()
         if choice == 1:
@@ -45,7 +45,7 @@ def show_menu():
                 banner_string = group_ids[0] + " In Progress"
             else:
                 banner_string = "Now Boarding: " + group_ids[0]
-            display_passenger_list(queue.__queue__, banner_string, delay_between_entries=.25, sort=False, index_list=passengers)
+            display_passenger_list(queue.__queue__, banner_string, delay_between_entries=.25, sort=False, index_list=passengers, show_availability=False)
             queue.clear()
             group_ids.pop(0)
             if len(group_ids) == 0:
@@ -54,10 +54,10 @@ def show_menu():
             passengers.clear()
         elif choice == 3:
             disable_default_value.append(True)
-            display_passenger_list(passengers, "ORDER OF QUEUE ENTRY", False)
+            display_passenger_list(passengers, "Order of Queue Entry for:\n" + group_ids[0], False, show_availability=False)
         elif choice == 4:
             disable_default_value.append(True)
-            display_passenger_list(queue.__queue__, "PRIORITIZED QUEUE", False, index_list=passengers)
+            display_passenger_list(queue.__queue__, "Prioritized Queue for Boarding Group:\n" + group_ids[0], False, index_list=passengers, show_availability=False)
         elif choice == 'X':
             get_my_passenger_list().clear()
             get_passenger_list().clear()

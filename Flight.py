@@ -108,10 +108,13 @@ def wanna_get_away_seats_available():
     return available
 
 
-def show_available_seats():
-    print("Business Select Seats Available:",
+def show_available_seats(indent=0):
+    indent_string = ""
+    for i in range(indent):
+        indent_string += '\t'
+    print(indent_string + "     Business Select Seats Available:",
           styled(styles["Outlined"], ' ' + str(business_select_seats_available()).rjust(3) + ' ') + " / 15")
-    print(" Wanna Get Away Seats Available:",
+    print(indent_string + "      Wanna Get Away Seats Available:",
           styled(styles["Outlined"], ' ' + str(wanna_get_away_seats_available()).rjust(3) + ' ') + " /135")
 
 

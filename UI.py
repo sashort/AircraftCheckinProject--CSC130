@@ -327,9 +327,13 @@ class Menu:
                     else:
                         key_str = key_str.rjust(max_key_length)
                     if key in self.__disabled_items__:
-                        print(indent_str + styled("Disabled Menu Item", (key_str + " " + self.menu_items[key].ljust(max_menu_item_length)).center(menu_width)))
+                        print(indent_str + styled("Disabled Menu Item", (
+                                    key_str + " " + self.menu_items[key].ljust(max_menu_item_length)).center(
+                            menu_width)))
                     else:
-                        print(indent_str + styled("Menu Item", (key_str + " " + self.menu_items[key].ljust(max_menu_item_length)).center(menu_width)))
+                        print(indent_str + styled("Menu Item", (
+                                    key_str + " " + self.menu_items[key].ljust(max_menu_item_length)).center(
+                            menu_width)))
             if not sticky_message:
                 self.__message_style__ = None
                 self.__message__ = None
@@ -402,10 +406,13 @@ styles["Inverted"] = Style(inverted=True)
 styles["Bold"] = Style(bold=True)
 
 # Menu Message Header Styles
-styles["Information"] = Style(background_gradient_color_left=(11, 11, 69), background_gradient_color_right="Black", bold=True)
+styles["Information"] = Style(background_gradient_color_left=(11, 11, 69), background_gradient_color_right="Black",
+                              bold=True)
 styles["Confirmation"] = Style(background_color="Green")
-styles["Caution"] = Style(background_gradient_color_left="Neon Orange", background_gradient_color_right="Burnt Orange", foreground_color="Black", bold=True)
-styles["Error"] = Style(background_gradient_color_left="Neon Red", background_gradient_color_right="Candy Apple Red", bold=True)
+styles["Caution"] = Style(background_gradient_color_left="Neon Orange", background_gradient_color_right="Burnt Orange",
+                          foreground_color="Black", bold=True)
+styles["Error"] = Style(background_gradient_color_left="Neon Red", background_gradient_color_right="Candy Apple Red",
+                        bold=True)
 
 # UI Specific Styles
 styles["Passenger List Banner"] = styles["Information"]
@@ -450,7 +457,8 @@ def passenger_string(passenger=None, *, index=0, underlined=False):
                          styled("Underlined", "First".rjust(Flight.__field_widths__["First Name"]))))
 
 
-def display_passenger_list(look_at, title="PASSENGER LIST", sort=True, delay_between_entries=0, index_list=None):
+def display_passenger_list(look_at, title="Passenger List", sort=True, delay_between_entries=0, index_list=None,
+                           show_availability=True, indent=1):
     def related(lst, index1, index2):
         if index1 < 0 or index2 >= len(lst):
             return False
@@ -477,15 +485,21 @@ def display_passenger_list(look_at, title="PASSENGER LIST", sort=True, delay_bet
 
     for i in range(100):
         print()
-    print("".rjust(Flight.total_field_width(), "─"))
-    print(styled("Passenger List Banner", "".center(Flight.total_field_width())))
-    print(styled("Passenger List Banner", title.center(Flight.total_field_width())))
-    print(styled("Passenger List Banner", "".center(Flight.total_field_width())))
+    indent_string = ""
+    for i in range(indent):
+        indent_string += '\t'
+    print(indent_string + "    " + "".rjust(Flight.total_field_width() - 4, "─"))
+    print(indent_string + "    " + styled("Passenger List Banner", "".center(Flight.total_field_width()-4)))
+    lines = title.replace('\r', '').split('\n')
+    for line in lines:
+        print(indent_string + "    " + styled("Passenger List Banner", line.center(Flight.total_field_width()-4)))
+    print(indent_string + "    " + styled("Passenger List Banner", "".center(Flight.total_field_width() - 4)))
     print()
-    Flight.show_available_seats()
-    print()
+    if show_availability:
+        Flight.show_available_seats(indent)
+        print()
     time.sleep(1)
-    print(passenger_string())
+    print(indent_string + passenger_string())
     count = 1
     if sort:
         look_at.sort()
@@ -496,9 +510,8 @@ def display_passenger_list(look_at, title="PASSENGER LIST", sort=True, delay_bet
             index = index_list.index(passenger) + 1
         else:
             index = i + 1
-        print(passenger_string(passenger, underlined=
-        i < len(look_at) - 1 and passenger.boarding_group() != look_at[i + 1].boarding_group() or i == len(
-            look_at) - 1, index=index), end='')
+        print(indent_string + passenger_string(passenger, underlined=
+        i < len(look_at) - 1 and passenger.boarding_group() != look_at[i + 1].boarding_group(), index=index), end='')
 
         if related(look_at, i - 1, i):
             if related(look_at, i, i + 1):
@@ -519,4 +532,4 @@ def display_passenger_list(look_at, title="PASSENGER LIST", sort=True, delay_bet
         prev_passenger = passenger
         if delay_between_entries > 0:
             time.sleep(delay_between_entries)
-    input(styled("Inverted", "DOUBLE TAP TO ENTER TO CONTINUE".center(Flight.total_field_width())))
+    input(indent_string + "    " + styled("Inverted", "Double Tap ENTER to continue".center(Flight.total_field_width()-4)))
