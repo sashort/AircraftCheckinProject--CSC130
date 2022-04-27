@@ -284,6 +284,8 @@ class Passenger:
                 return 3000
             elif isinstance(self, AttendantPassenger):
                 return 1000
+            elif self.is_business_select:
+                return 2000
             else:
                 return 7000
         value = int(self.boarding_id[1:])

@@ -255,7 +255,7 @@ class Menu:
     def menu_item(self, key):
         return MenuItem(self, key)
 
-    def show(self, prompt=None, *, center_message=True, indent=0, show_available_seats=False, default_value=None,
+    def show(self, prompt=None, *, center_message=True, indent=1, show_available_seats=False, default_value=None,
              sticky_message=False, show_title_first=False):
         response = None
         indent_str = ""
