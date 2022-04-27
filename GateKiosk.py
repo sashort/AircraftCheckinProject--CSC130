@@ -21,7 +21,7 @@ def show_menu():
 
 
 def upgrade_passenger():
-    passenger_id = input("Enter Passenger Confirmation ID: ")
+    passenger_id = input("Enter Passenger Confirmation ID: ").upper()
     if passenger_id in passenger_dict.keys():
         my_passenger = passenger_dict[passenger_id]
         if my_passenger.is_business_select:
@@ -42,7 +42,7 @@ def upgrade_passenger():
 
 
 def grant_extra_time():
-    passenger_id = input("Enter Passenger Confirmation ID: ")
+    passenger_id = input("Enter Passenger Confirmation ID: ").upper()
     if passenger_id in passenger_dict.keys():
         my_passenger = passenger_dict[passenger_id]
         if isinstance(my_passenger, DisabledPassenger):
