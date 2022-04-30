@@ -117,7 +117,9 @@ def show_menu():
             a.elder = d
             d.attendant = a
             get_my_passenger_list().append(a)
-        booking_menu.set_message("Disabled Passenger and\nAttendant Booked", "Confirmation")
+            booking_menu.set_message("Disabled Passenger and\nAttendant Booked", "Confirmation")
+        else:
+            booking_menu.set_message("Disabled Passenger Booked", "Confirmation")
 
     def show_family_menu():
         while True:
