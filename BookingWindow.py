@@ -189,7 +189,7 @@ def show_menu():
                     return
                 name_list.append(last)
                 name_list.append(first)
-        parent = ParentPassenger(name_list.pop(0), name_list.pop(1))
+        parent = ParentPassenger(name_list.pop(0), name_list.pop(0))
         get_my_passenger_list().append(parent)
         if spouse == 'Y':
             sp = ParentPassenger(name_list.pop(0), name_list.pop(0), spouse=parent)
